@@ -99,7 +99,7 @@ export function TemplateStep({ design, onDesign, resumeId, hasPhoto, photoUrl, o
 
       <div>
         <h3 className="mb-2 text-lg font-extrabold">Ordem das seções</h3>
-        <p className="mb-2 text-sm text-muted">Recomendado pelo RH: resumo → experiência → formação → habilidades e idiomas. Seções vazias não aparecem.</p>
+        <p className="mb-2 text-sm text-muted">Recomendado pelo RH: resumo, experiência, formação, habilidades e idiomas. Seções vazias não aparecem.</p>
         <ol className="space-y-2">
           {design.sectionOrder.map((k, i) => {
             const hidden = design.hiddenSections.includes(k);
@@ -107,8 +107,8 @@ export function TemplateStep({ design, onDesign, resumeId, hasPhoto, photoUrl, o
               <li key={k} className="flex items-center justify-between gap-2 rounded-xl bg-white p-2 pl-4 ring-1 ring-zinc-200">
                 <span className={`font-bold ${hidden ? "text-zinc-400 line-through" : ""}`}>{SECTION_LABELS[k]}</span>
                 <span className="flex gap-1">
-                  <button type="button" onClick={() => move(k, -1)} disabled={i === 0} aria-label={`Subir ${SECTION_LABELS[k]}`} className="min-h-11 min-w-11 rounded-full ring-1 ring-zinc-300 disabled:opacity-30">↑</button>
-                  <button type="button" onClick={() => move(k, 1)} disabled={i === design.sectionOrder.length - 1} aria-label={`Descer ${SECTION_LABELS[k]}`} className="min-h-11 min-w-11 rounded-full ring-1 ring-zinc-300 disabled:opacity-30">↓</button>
+                  <button type="button" onClick={() => move(k, -1)} disabled={i === 0} aria-label={`Subir ${SECTION_LABELS[k]}`} className="min-h-11 min-w-11 rounded-full ring-1 ring-zinc-300 disabled:opacity-30">Subir</button>
+                  <button type="button" onClick={() => move(k, 1)} disabled={i === design.sectionOrder.length - 1} aria-label={`Descer ${SECTION_LABELS[k]}`} className="min-h-11 min-w-11 rounded-full ring-1 ring-zinc-300 disabled:opacity-30">Descer</button>
                   <button type="button" onClick={() => toggle(k)} className="min-h-11 rounded-full px-3 text-sm font-bold ring-1 ring-zinc-300">{hidden ? "Mostrar" : "Ocultar"}</button>
                 </span>
               </li>

@@ -67,8 +67,8 @@ export function ListEditor<T extends { id: string }>({ items, onChange, newItem,
           <legend className="px-2 text-sm font-extrabold text-brand-dark">{itemLabel(it, i)}</legend>
           {children(it, (patch) => onChange(items.map((x) => (x.id === it.id ? { ...x, ...patch } : x))), i)}
           <div className="flex flex-wrap gap-2">
-            <button type="button" className={small} onClick={() => move(i, -1)} disabled={i === 0} aria-label="Mover para cima">↑ Subir</button>
-            <button type="button" className={small} onClick={() => move(i, 1)} disabled={i === items.length - 1} aria-label="Mover para baixo">↓ Descer</button>
+            <button type="button" className={small} onClick={() => move(i, -1)} disabled={i === 0} aria-label="Mover para cima">Subir</button>
+            <button type="button" className={small} onClick={() => move(i, 1)} disabled={i === items.length - 1} aria-label="Mover para baixo">Descer</button>
             <button type="button" className={`${small} !text-red-700`} onClick={() => onChange(items.filter((x) => x.id !== it.id))}>Remover</button>
           </div>
         </fieldset>
@@ -94,7 +94,7 @@ export function TagInput({ label, values, onChange, hint }: { label: string; val
       <div className="flex flex-wrap gap-2">
         {values.map((v) => (
           <button key={v} type="button" onClick={() => onChange(values.filter((x) => x !== v))}
-            className="min-h-10 rounded-full bg-chip px-3 text-sm font-bold text-navy" aria-label={`Remover ${v}`}>{v} ✕</button>
+            className="min-h-10 rounded-full bg-chip px-3 text-sm font-bold text-navy" aria-label={`Remover ${v}`}>{v} ×</button>
         ))}
       </div>
       <input id={id} value={text} onChange={(e) => (e.target.value.includes(",") ? commit(e.target.value) : setText(e.target.value))}

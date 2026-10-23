@@ -37,7 +37,7 @@ export function DeleteResumeButton({ id, title }: { id: string; title: string })
   }
   return (
     <span className="inline-flex flex-col">
-      <Button variant="ghost" onClick={del} disabled={busy} className="!min-h-11 !text-red-700 text-sm">{busy ? "Excluindo…" : "🗑 Excluir"}</Button>
+      <Button variant="ghost" onClick={del} disabled={busy} className="!min-h-11 !text-red-700 text-sm">{busy ? "Excluindo…" : "Excluir"}</Button>
       {err ? <span role="alert" className="text-sm text-red-700">{err}</span> : null}
     </span>
   );

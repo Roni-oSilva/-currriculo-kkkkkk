@@ -97,8 +97,8 @@ export function PreviewClient({ resumeId, version, data, design, priceLabel, pay
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <h1 className="text-2xl font-extrabold">Prévia gratuita</h1>
             <div className="flex flex-wrap gap-2">
-              <LinkButton href={`/resume/${resumeId}/edit`} variant="outline" className="!min-h-11 text-sm">✏️ Continuar editando</LinkButton>
-              <Button variant="outline" onClick={load} disabled={loading} className="!min-h-11 text-sm">{loading ? "Gerando…" : "↻ Gerar prévia novamente"}</Button>
+              <LinkButton href={`/resume/${resumeId}/edit`} variant="outline" className="!min-h-11 text-sm">Continuar editando</LinkButton>
+              <Button variant="outline" onClick={load} disabled={loading} className="!min-h-11 text-sm">{loading ? "Gerando…" : "Gerar prévia novamente"}</Button>
             </div>
           </div>
           <p className="mb-3 text-sm text-muted">Mude o que quiser até achar que está bom: edite, gere a prévia de novo e confira a paginação. Só pague quando estiver satisfeito.</p>
@@ -123,7 +123,7 @@ export function PreviewClient({ resumeId, version, data, design, priceLabel, pay
         <Card className="space-y-3">
           {paid ? (
             <>
-              <h2 className="text-xl font-extrabold">✅ Currículo liberado</h2>
+              <h2 className="text-xl font-extrabold">Currículo liberado</h2>
               <p className="text-sm text-muted">Pagamento confirmado para a versão {version}. O PDF é gerado sem marca d’água, com texto selecionável.</p>
               <DownloadButton resumeId={resumeId} version={version} label="Baixar PDF" />
               <DownloadButton resumeId={resumeId} version={version} regenerate label="Gerar o arquivo novamente" variant="outline" />

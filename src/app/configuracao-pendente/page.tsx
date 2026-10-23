@@ -23,7 +23,7 @@ export default function Pending() {
           <ul className="space-y-2">
             {rows.map(([n, ok, vars]) => (
               <li key={n} className="rounded-xl bg-white p-3">
-                <p className="font-bold">{ok ? "✅" : "⏳"} {n}</p>
+                <p className="font-bold">{n} — {ok ? "pronto" : "pendente"}</p>
                 {!ok ? <p className="text-sm text-muted">Defina: <code>{vars}</code></p> : null}
               </li>
             ))}

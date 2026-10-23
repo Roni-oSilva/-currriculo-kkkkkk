@@ -32,7 +32,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
   const cards: [string, string][] = [
     ["Usuários (total)", String(m.users_total ?? 0)], ["Currículos criados", String(m.resumes_created ?? 0)],
     ["Pagamentos aprovados", String(m.payments_approved ?? 0)], ["Receita bruta", formatBRL(m.gross_cents ?? 0)],
-    ["Reembolsos", formatBRL(m.refunded_cents ?? 0)], ["Conversão criação → compra", `${conversion.toString().replace(".", ",")}%`],
+    ["Reembolsos", formatBRL(m.refunded_cents ?? 0)], ["Conversão da criação à compra", `${conversion.toString().replace(".", ",")}%`],
   ];
   const iso = (d: Date) => d.toISOString().slice(0, 10);
 

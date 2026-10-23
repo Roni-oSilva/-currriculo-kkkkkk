@@ -15,12 +15,12 @@ const STEPS = [
 ];
 
 const BENEFITS = [
-  ["📊", "Nota de aceitação 0–10", "Mostramos o que falta para o seu currículo ser bem avaliado por RH e por sistemas de triagem (ATS)."],
-  ["✍️", "Texto melhor, fatos intactos", "Corrige e organiza, mas preserva empresas, datas, cursos e habilidades reais. Nada é inventado."],
-  ["✅", "Você aprova tudo", "Nenhuma sugestão é aplicada sem o seu “aceitar”. Mude até achar que está bom."],
-  ["📄", "Modelos que o RH aprova", "Clássico e Minimalista seguem o padrão mais aceito: fundo branco, coluna única e texto selecionável."],
-  ["📱", "Funciona no celular", "Preencha e confira a prévia pelo telefone, com botões grandes e salvamento automático."],
-  ["🔒", "Privacidade de verdade", "Fotos e arquivos em armazenamento privado. Você exclui a conta e os dados quando quiser."],
+  ["Nota de aceitação 0–10", "Mostramos o que falta para o seu currículo ser bem avaliado por RH e por sistemas de triagem (ATS)."],
+  ["Texto melhor, fatos intactos", "Corrige e organiza, mas preserva empresas, datas, cursos e habilidades reais. Nada é inventado."],
+  ["Você aprova tudo", "Nenhuma sugestão é aplicada sem o seu “aceitar”. Mude até achar que está bom."],
+  ["Modelos que o RH aprova", "Clássico e Minimalista seguem o padrão mais aceito: fundo branco, coluna única e texto selecionável."],
+  ["Funciona no celular", "Preencha e confira a prévia pelo telefone, com botões grandes e salvamento automático."],
+  ["Privacidade de verdade", "Fotos e arquivos em armazenamento privado. Você exclui a conta e os dados quando quiser."],
 ];
 
 const PREPARE = [
@@ -35,10 +35,10 @@ const PREPARE = [
 ];
 
 const AUDIENCE = [
-  ["🌱", "Primeiro emprego", "Sem experiência? Destaque formação, cursos, projetos e voluntariado."],
-  ["🔁", "Recolocação", "Atualize e adapte o currículo para cada nova vaga em minutos."],
-  ["🎓", "Estágio e jovem aprendiz", "Modelo enxuto, de 1 página, direto ao ponto."],
-  ["🧭", "Mudança de área", "Reorganize as seções para valorizar o que combina com o novo objetivo."],
+  ["Primeiro emprego", "Sem experiência? Destaque formação, cursos, projetos e voluntariado."],
+  ["Recolocação", "Atualize e adapte o currículo para cada nova vaga em minutos."],
+  ["Estágio e jovem aprendiz", "Modelo enxuto, de 1 página, direto ao ponto."],
+  ["Mudança de área", "Reorganize as seções para valorizar o que combina com o novo objetivo."],
 ];
 
 const RULES_DO = [
@@ -96,8 +96,8 @@ export default async function Home() {
               <LinkButton href={cta} variant="accent" className="pulse-ring">Criar meu currículo</LinkButton>
               <LinkButton href="#modelos" variant="outline">Ver modelos</LinkButton>
             </div>
-            <ul className="anim-up flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold text-muted" style={{ "--d": "400ms" } as React.CSSProperties}>
-              <li>✔ Prévia grátis</li><li>✔ PDF por {price}</li><li>✔ Pix, sem mensalidade</li><li>✔ LGPD</li>
+            <ul className="tick-list anim-up flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold text-muted" style={{ "--d": "400ms" } as React.CSSProperties}>
+              <li>Prévia grátis</li><li>PDF por {price}</li><li>Pix, sem mensalidade</li><li>LGPD</li>
             </ul>
           </div>
           <div className="hero-blue swirl anim-up relative rounded-[28px] p-6 text-white" style={{ "--d": "250ms" } as React.CSSProperties}>
@@ -106,17 +106,16 @@ export default async function Home() {
             <div className="mt-3 flex items-end gap-2"><CountUp to={8.7} className="text-7xl font-extrabold" /><span className="pb-3 text-2xl font-bold text-chip">/10</span></div>
             <div className="mt-1 h-2 overflow-hidden rounded-full bg-white/20"><div className="h-full w-[87%] origin-left rounded-full bg-chip" style={{ animation: "sweep 1.4s .3s cubic-bezier(.2,.7,.2,1) both" }} /></div>
             <p className="mt-3 font-bold">Alta chance de passar na triagem com este modelo.</p>
-            <ul className="mt-4 space-y-2 text-sm">
-              <li className="anim-in" style={{ "--d": "600ms" } as React.CSSProperties}>✔ Contato completo e resumo no tamanho ideal</li>
-              <li className="anim-in" style={{ "--d": "800ms" } as React.CSSProperties}>✔ Experiências em ordem cronológica inversa</li>
-              <li className="anim-in" style={{ "--d": "1000ms" } as React.CSSProperties}>• Dica: acrescente resultados com números reais</li>
+            <ul className="tick-list mt-4 space-y-2 text-sm">
+              <li className="anim-in" style={{ "--d": "600ms" } as React.CSSProperties}>Contato completo e resumo no tamanho ideal</li>
+              <li className="anim-in" style={{ "--d": "800ms" } as React.CSSProperties}>Experiências em ordem cronológica inversa</li>
+              <li className="anim-in" style={{ "--d": "1000ms" } as React.CSSProperties}>Dica: acrescente resultados com números reais</li>
             </ul>
           </div>
         </section>
 
         {/* MODELOS */}
-        <Reveal as="section" className="mx-auto max-w-6xl scroll-mt-20 rounded-[32px] bg-paper p-6 sm:p-10">
-          <div id="modelos" className="scroll-mt-24" />
+        <Reveal as="section" id="modelos" className="mx-auto max-w-6xl scroll-mt-20 rounded-[32px] bg-paper p-6 sm:p-10">
           <h2 className="text-3xl font-extrabold">Modelos <Marker>profissionais</Marker></h2>
           <p className="mt-2 max-w-2xl text-muted">Todos com texto selecionável e boa leitura por ATS.</p>
           <ul className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -153,14 +152,14 @@ export default async function Home() {
             <h2 className="text-2xl font-extrabold">O que ter em <Marker>mãos</Marker></h2>
             <p className="mt-2 text-sm text-muted">Separe isso antes de começar e leva uns 10 minutos. Não tem tudo? Sem problema, preencha o que tiver.</p>
             <ul className="mt-4 space-y-2">
-              {PREPARE.map((p, i) => <Reveal as="li" key={p} delay={i * 50} className="flex gap-3 rounded-xl bg-white px-4 py-3 text-sm font-semibold"><span aria-hidden className="text-brand">☐</span>{p}</Reveal>)}
+              {PREPARE.map((p, i) => <Reveal as="li" key={p} delay={i * 50} className="flex gap-3 rounded-xl bg-white px-4 py-3 text-sm font-semibold"><span aria-hidden className="mt-0.5 h-4 w-4 shrink-0 rounded border-2 border-brand" />{p}</Reveal>)}
             </ul>
           </Reveal>
           <Reveal as="div" delay={120} className="rounded-[32px] bg-paper p-6 sm:p-8">
             <h2 className="text-2xl font-extrabold">Para quem é</h2>
             <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-              {AUDIENCE.map(([i, t, d]) => (
-                <li key={t} className="lift rounded-2xl bg-white p-4"><p className="text-2xl" aria-hidden>{i}</p><h3 className="font-extrabold">{t}</h3><p className="text-sm text-muted">{d}</p></li>
+              {AUDIENCE.map(([t, d]) => (
+                <li key={t} className="lift rounded-2xl bg-white p-4"><span className="mb-2 block h-1.5 w-8 rounded-full bg-accent" aria-hidden /><h3 className="font-extrabold">{t}</h3><p className="text-sm text-muted">{d}</p></li>
               ))}
             </ul>
           </Reveal>
@@ -172,12 +171,12 @@ export default async function Home() {
           <p className="mt-2 max-w-3xl text-muted">Modelos sóbrios, de coluna única, passam melhor pelos sistemas de triagem (ATS). Seguimos estas boas práticas no editor e na nota.</p>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             <Reveal as="div" className="rounded-2xl bg-emerald-50 p-5 ring-1 ring-emerald-200">
-              <h3 className="font-extrabold text-emerald-900">✔ Faça</h3>
-              <ul className="mt-2 space-y-1.5 text-sm">{RULES_DO.map((r) => <li key={r}>• {r}</li>)}</ul>
+              <h3 className="font-extrabold text-emerald-900">Faça</h3>
+              <ul className="tick-list mt-2 space-y-1.5 text-sm">{RULES_DO.map((r) => <li key={r}>{r}</li>)}</ul>
             </Reveal>
             <Reveal as="div" delay={120} className="rounded-2xl bg-red-50 p-5 ring-1 ring-red-200">
-              <h3 className="font-extrabold text-red-900">✖ Evite</h3>
-              <ul className="mt-2 space-y-1.5 text-sm">{RULES_DONT.map((r) => <li key={r}>• {r}</li>)}</ul>
+              <h3 className="font-extrabold text-red-900">Evite</h3>
+              <ul className="tick-list mt-2 space-y-1.5 text-sm">{RULES_DONT.map((r) => <li key={r}>{r}</li>)}</ul>
             </Reveal>
           </div>
           <h3 className="mt-8 text-xl font-extrabold">Estrutura ideal, na ordem certa</h3>
@@ -204,10 +203,10 @@ export default async function Home() {
         <section className="mx-auto max-w-6xl rounded-[32px] bg-paper p-6 sm:p-10">
           <h2 className="text-3xl font-extrabold">Feito para ser <Marker>fácil</Marker></h2>
           <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {BENEFITS.map(([ic, t, d], i) => (
+            {BENEFITS.map(([t, d], i) => (
               <Reveal as="li" key={t} delay={i * 70} className="lift rounded-2xl bg-white p-5">
-                <span className="text-2xl" aria-hidden>{ic}</span>
-                <h3 className="mt-1 font-extrabold text-brand-dark">{t}</h3>
+                <span className="mb-2 block h-1.5 w-8 rounded-full bg-brand" aria-hidden />
+                <h3 className="font-extrabold text-brand-dark">{t}</h3>
                 <p className="mt-1 text-sm text-muted">{d}</p>
               </Reveal>
             ))}
@@ -220,11 +219,11 @@ export default async function Home() {
           <Reveal as="div" className="mx-auto mt-6 max-w-md rounded-[28px] bg-brand p-8 text-white">
             <p className="text-6xl font-extrabold">{price}</p>
             <p className="mt-1 font-bold">por currículo liberado</p>
-            <ul className="mt-4 space-y-1 text-left text-sm">
-              <li>✔ Prévia gratuita e edições ilimitadas antes de pagar</li>
-              <li>✔ PDF final sem marca d’água, com texto selecionável</li>
-              <li>✔ Nota de aceitação 0–10 e sugestões de melhoria</li>
-              <li>✔ Pagamento via Pix, sem mensalidade</li>
+            <ul className="tick-list mt-4 space-y-1 text-left text-sm">
+              <li>Prévia gratuita e edições ilimitadas antes de pagar</li>
+              <li>PDF final sem marca d’água, com texto selecionável</li>
+              <li>Nota de aceitação 0–10 e sugestões de melhoria</li>
+              <li>Pagamento via Pix, sem mensalidade</li>
             </ul>
             <LinkButton href={cta} variant="accent" className="mt-6 w-full">Começar grátis</LinkButton>
           </Reveal>

@@ -60,8 +60,8 @@ export default async function Dashboard() {
                 <span className="rounded-full bg-chip px-3 py-1 text-sm font-bold text-navy">{r.status === "ready" ? "Pronto para prévia" : "Rascunho"}</span>
               </div>
               <div className="flex flex-wrap gap-2">
-                <LinkButton href={`/resume/${r.id}/edit`} variant="outline" className="!min-h-11 text-sm">✏️ Editar</LinkButton>
-                <LinkButton href={`/resume/${r.id}/preview`} variant="outline" className="!min-h-11 text-sm">👁 Prévia e pagamento</LinkButton>
+                <LinkButton href={`/resume/${r.id}/edit`} variant="outline" className="!min-h-11 text-sm">Editar</LinkButton>
+                <LinkButton href={`/resume/${r.id}/preview`} variant="outline" className="!min-h-11 text-sm">Prévia e pagamento</LinkButton>
                 <DeleteResumeButton id={r.id} title={r.title} />
               </div>
               {pays.length ? (

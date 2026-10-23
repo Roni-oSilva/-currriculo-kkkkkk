@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
 /** Revela o bloco ao entrar na tela. Sem JS (ou acima da dobra) o conteúdo já aparece normalmente. */
-export function Reveal({ children, delay = 0, className = "", as: Tag = "div" }: { children: ReactNode; delay?: number; className?: string; as?: "div" | "li" | "section" | "article" }) {
+export function Reveal({ children, delay = 0, className = "", id, as: Tag = "div" }: { children: ReactNode; id?: string; delay?: number; className?: string; as?: "div" | "li" | "section" | "article" }) {
   const ref = useRef<HTMLElement | null>(null);
   useEffect(() => {
     const el = ref.current;
@@ -19,7 +19,7 @@ export function Reveal({ children, delay = 0, className = "", as: Tag = "div" }:
   }, []);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const T = Tag as any;
-  return <T ref={ref} className={`reveal ${className}`} style={{ "--d": `${delay}ms` } as React.CSSProperties}>{children}</T>;
+  return <T ref={ref} id={id} className={`reveal ${className}`} style={{ "--d": `${delay}ms` } as React.CSSProperties}>{children}</T>;
 }
 
 /** Número que "sobe" até o valor final (usado na nota do exemplo). */

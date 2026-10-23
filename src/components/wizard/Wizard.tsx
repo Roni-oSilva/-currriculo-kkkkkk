@@ -14,7 +14,7 @@ import { AtsCard } from "./AtsCard";
 const STEPS = ["Dados pessoais", "Objetivo", "Experiência", "Formação", "Cursos", "Habilidades", "Adicionais", "Modelo", "Revisão"] as const;
 
 const STATUS_TEXT: Record<SaveStatus, string> = {
-  saved: "✔ Salvo", dirty: "Alterações pendentes…", saving: "Salvando…", offline: "Sem conexão — salvaremos ao voltar", error: "Falha ao salvar — tentando de novo",
+  saved: "Salvo", dirty: "Alterações pendentes…", saving: "Salvando…", offline: "Sem conexão — salvaremos ao voltar", error: "Falha ao salvar — tentando de novo",
 };
 
 const TIPS = [
@@ -199,7 +199,7 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
           <AiPanel resumeId={resumeId} data={data} flush={flush} hasConsent={aiConsent} aiEnabled={aiEnabled}
             onApply={(d) => setData(() => d)} />
           {issues.length ? <Notice tone="warn">{issues.join(" ")}</Notice> : null}
-          <Button onClick={goPreview} disabled={goingToPreview || issues.length > 0} className="w-full sm:w-auto">{goingToPreview ? "Salvando…" : "Ver prévia do currículo →"}</Button>
+          <Button onClick={goPreview} disabled={goingToPreview || issues.length > 0} className="w-full sm:w-auto">{goingToPreview ? "Salvando…" : "Ver prévia do currículo"}</Button>
         </div>
       );
     }
@@ -239,8 +239,8 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
       </Card>
 
       <div className="sticky bottom-0 -mx-1 flex justify-between gap-3 bg-char/95 p-3 backdrop-blur">
-        <Button variant="light" onClick={() => setStep((s) => Math.max(0, s - 1))} disabled={step === 0}>← Voltar</Button>
-        {step < STEPS.length - 1 ? <Button onClick={() => setStep((s) => s + 1)}>Continuar →</Button> : null}
+        <Button variant="light" onClick={() => setStep((s) => Math.max(0, s - 1))} disabled={step === 0}>Voltar</Button>
+        {step < STEPS.length - 1 ? <Button onClick={() => setStep((s) => s + 1)}>Continuar</Button> : null}
       </div>
     </div>
   );
