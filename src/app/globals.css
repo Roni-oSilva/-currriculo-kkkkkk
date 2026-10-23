@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --color-brand: #0f4fd6;
+  --color-brand-dark: #0a2f86;
+  --color-navy: #0a1f5c;
+  --color-ink: #1c1c21;
+  --color-char: #26262b;
+  --color-paper: #f2f2f2;
+  --color-chip: #bcd6f8;
+  --color-muted: #52525b;
+  --radius-card: 28px;
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--color-char); color: var(--color-ink); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+
+:focus-visible { outline: 3px solid #ffd34d; outline-offset: 2px; border-radius: 6px; }
+
+/* Etiqueta tipo "marca-texto" com alças, como no layout de referência */
+.marker {
+  position: relative; display: inline-block; padding: .15em .55em; margin: 0 .35rem;
+  background: var(--color-chip); color: var(--color-navy); font-weight: 800;
+}
+.marker::before, .marker::after {
+  content: ""; position: absolute; top: -3px; bottom: -3px; width: 3px; background: var(--color-brand);
+}
+.marker::before { left: -3px; } .marker::after { right: -3px; }
+
+.hero-blue { background: linear-gradient(135deg, #0f4fd6 0%, #0a2f86 55%, #0a1f5c 100%); }
+.swirl { background-image: radial-gradient(circle at 12% 18%, rgba(255,255,255,.10) 0 120px, transparent 121px), radial-gradient(circle at 88% 80%, rgba(255,255,255,.08) 0 160px, transparent 161px); }
+
+/* Prévia protegida */
+.protected { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.protected img { pointer-events: none; -webkit-user-drag: none; }
+@media print {
+  .protected, .protected * { display: none !important; }
+  body::before { content: "A impressão da prévia está desativada. Desbloqueie o currículo para baixar o PDF."; display: block; padding: 2rem; font-size: 1.25rem; }
+}
