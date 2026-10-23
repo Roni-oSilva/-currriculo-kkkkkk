@@ -17,6 +17,18 @@ const STATUS_TEXT: Record<SaveStatus, string> = {
   saved: "✔ Salvo", dirty: "Alterações pendentes…", saving: "Salvando…", offline: "Sem conexão — salvaremos ao voltar", error: "Falha ao salvar — tentando de novo",
 };
 
+const TIPS = [
+  "Use um e-mail profissional. Cidade e estado bastam: não precisa de endereço completo, CPF ou RG.",
+  "Diga qual vaga você busca e resuma sua trajetória em 3 a 5 linhas. Use palavras da descrição da vaga.",
+  "Da mais recente para a mais antiga. Descreva o que fazia e, se souber, resultados com números reais.",
+  "Informe curso, instituição e ano de conclusão (ou previsão). Em andamento também vale.",
+  "Cursos e certificados reforçam o currículo, principalmente para quem está começando.",
+  "Liste softwares, ferramentas e competências em texto. Evite barras ou porcentagens de nível.",
+  "Idiomas com nível real, projetos, voluntariado e prêmios. Tudo opcional.",
+  "Clássico e Minimalista são os mais aceitos por RH e por sistemas de triagem. Dá para trocar a qualquer momento.",
+  "Confira a nota, aplique as dicas e só então veja a prévia. Você pode voltar e mudar quando quiser.",
+] as const;
+
 const uid = () => crypto.randomUUID();
 
 export interface WizardProps {
@@ -82,7 +94,7 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
             <SelectField label="Tipo de vaga pretendida" value={data.objective.jobType} onChange={(v) => objective({ jobType: v })} options={JOB_TYPES} />
           </div>
           <AreaField label="Resumo profissional" rows={6} maxLength={1500} value={data.objective.summary} onChange={(v) => objective({ summary: v })}
-            hint="3 a 5 linhas: sua trajetória, principais competências e foco. Na revisão, a IA pode melhorar a redação sem mudar os fatos." />
+            hint="3 a 5 linhas: sua trajetória, principais competências e foco. Na revisão, o assistente pode melhorar a redação sem mudar os fatos." />
         </div>
       );
       case 2: return (
@@ -205,7 +217,7 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
         <nav aria-label="Etapas">
           <p className="mb-2 text-sm font-bold text-muted">Etapa {step + 1} de {STEPS.length}</p>
           <div className="h-2 overflow-hidden rounded-full bg-zinc-300" role="progressbar" aria-valuemin={1} aria-valuemax={STEPS.length} aria-valuenow={step + 1}>
-            <div className="h-full bg-brand transition-all" style={{ width: `${((step + 1) / STEPS.length) * 100}%` }} />
+            <div className="bar-grow h-full bg-brand" style={{ width: `${((step + 1) / STEPS.length) * 100}%` }} />
           </div>
           <ol className="mt-3 flex gap-2 overflow-x-auto pb-1">
             {STEPS.map((s, i) => (
@@ -219,8 +231,11 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
       </Card>
 
       <Card>
-        <h2 className="mb-4 text-2xl font-extrabold">{STEPS[step]}</h2>
-        {body}
+        <div key={step} className="step-enter">
+          <h2 className="text-2xl font-extrabold">{STEPS[step]}</h2>
+          <p className="mb-4 mt-1 text-sm text-muted">{TIPS[step]}</p>
+          {body}
+        </div>
       </Card>
 
       <div className="sticky bottom-0 -mx-1 flex justify-between gap-3 bg-char/95 p-3 backdrop-blur">

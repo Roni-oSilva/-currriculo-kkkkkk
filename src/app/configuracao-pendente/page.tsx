@@ -9,7 +9,7 @@ export default function Pending() {
   const rows: [string, boolean, string][] = [
     ["Supabase (login e banco)", configStatus.supabase(), "NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY"],
     ["Supabase service role (servidor)", configStatus.supabaseAdmin(), "SUPABASE_SERVICE_ROLE_KEY"],
-    ["Inteligência artificial", configStatus.ai(), "AI_PROVIDER, AI_API_KEY, AI_MODEL (e AI_BASE_URL)"],
+    ["Assistente de sugestões (provedor externo)", configStatus.ai(), "AI_PROVIDER, AI_API_KEY, AI_MODEL (e AI_BASE_URL)"],
     ["Mercado Pago (Pix)", configStatus.payments(), "MERCADOPAGO_ACCESS_TOKEN"],
     ["Webhook do Mercado Pago", configStatus.webhook(), "MERCADOPAGO_WEBHOOK_SECRET"],
   ];

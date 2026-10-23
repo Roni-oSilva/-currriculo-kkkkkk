@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { Button, Card, LinkButton, Notice } from "./ui";
 import { AtsCard } from "./wizard/AtsCard";
 import { DownloadButton } from "./DownloadButton";
@@ -167,7 +166,6 @@ export function PreviewClient({ resumeId, version, data, design, priceLabel, pay
             </>
           )}
         </Card>
-        <p className="px-2 text-center text-sm text-white/70">Dúvidas? <Link href="/reembolso" className="underline">Política de reembolso</Link></p>
       </aside>
     </div>
   );

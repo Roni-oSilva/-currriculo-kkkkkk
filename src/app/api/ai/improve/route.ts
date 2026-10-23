@@ -22,7 +22,7 @@ export async function POST(req: Request) {
   const ctx = await authenticate();
   if (isResponse(ctx)) return ctx;
   if (!configStatus.ai()) {
-    return jsonError("A IA ainda não foi configurada neste ambiente. Veja docs/AI.md.", 503, { code: "ai_not_configured" });
+    return jsonError("O assistente de sugestões ainda não foi ativado neste ambiente.", 503, { code: "ai_not_configured" });
   }
   const rl = limited(`ai:${ctx.user.id}`, 6, 60_000);
   if (rl) return rl;
@@ -37,13 +37,13 @@ export async function POST(req: Request) {
 
   // Consentimento explícito (LGPD) antes de enviar qualquer conteúdo ao provedor de IA.
   const { data: profile } = await ctx.supabase.from("profiles").select("ai_consent_at").eq("id", ctx.user.id).maybeSingle();
-  if (!profile?.ai_consent_at) return jsonError("É preciso autorizar o envio dos dados à IA.", 403, { code: "ai_consent_required" });
+  if (!profile?.ai_consent_at) return jsonError("É preciso autorizar o envio dos dados ao assistente.", 403, { code: "ai_consent_required" });
 
   // Limite persistente por usuário (vale entre instâncias serverless).
   const admin = createAdminClient();
   const since = new Date(Date.now() - 60 * 60_000).toISOString();
   const { count } = await admin.from("ai_generations").select("id", { count: "exact", head: true }).eq("user_id", ctx.user.id).gte("created_at", since);
-  if ((count ?? 0) >= env.aiRateLimitPerHour) return jsonError("Limite de usos da IA por hora atingido. Tente mais tarde.", 429);
+  if ((count ?? 0) >= env.aiRateLimitPerHour) return jsonError("Limite de usos do assistente por hora atingido. Tente mais tarde.", 429);
 
   const { data: gen } = await admin.from("ai_generations").insert({ user_id: ctx.user.id, resume_id: resumeId, operation: OP_DB[operation], status: "started", meta: { provider: env.aiProvider, model: env.aiModel } }).select("id").single();
   const started = Date.now();
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
   } catch (e) {
     await admin.from("ai_generations").update({ status: "failed", meta: { provider: env.aiProvider, ms: Date.now() - started } }).eq("id", gen?.id);
     await logEvent("error", "ai_failed", e instanceof Error ? e.constructor.name : "erro");
-    if (e instanceof AiNotConfiguredError) return jsonError("A IA ainda não foi configurada neste ambiente.", 503, { code: "ai_not_configured" });
-    return jsonError("A IA não conseguiu responder agora. Seus dados não foram alterados. Tente novamente.", 502);
+    if (e instanceof AiNotConfiguredError) return jsonError("O assistente de sugestões ainda não foi ativado neste ambiente.", 503, { code: "ai_not_configured" });
+    return jsonError("O assistente não conseguiu responder agora. Seus dados não foram alterados. Tente novamente.", 502);
   }
 }

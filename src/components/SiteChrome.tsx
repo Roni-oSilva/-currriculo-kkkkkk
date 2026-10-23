@@ -7,9 +7,10 @@ export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
     <header className="sticky top-0 z-30 border-b border-white/10 bg-char/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
         <Logo light />
-        <nav aria-label="Principal" className="hidden items-center gap-6 text-sm font-semibold text-white/85 md:flex">
+        <nav aria-label="Principal" className="hidden items-center gap-6 text-sm font-semibold text-white/85 md:flex [&_a]:link-u">
           <Link href="/#modelos" className="hover:text-white">Modelos</Link>
           <Link href="/#como-funciona" className="hover:text-white">Como funciona</Link>
+          <Link href="/#dicas" className="hover:text-white">Dicas de RH</Link>
           <Link href="/#preco" className="hover:text-white">Preço</Link>
           <Link href="/#duvidas" className="hover:text-white">Dúvidas</Link>
         </nav>
@@ -34,19 +35,18 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-3">
         <div className="space-y-3">
           <Logo light />
-          <p className="text-sm">Transforme suas informações em um currículo profissional, sem inventar nada.</p>
+          <p className="text-sm">Currículos profissionais, claros e prontos para o RH. Sem inventar nada sobre você.</p>
         </div>
         <nav aria-label="Rodapé" className="space-y-2 text-sm font-semibold">
           <Link className="block hover:text-white" href="/termos">Termos de uso</Link>
           <Link className="block hover:text-white" href="/privacidade">Política de privacidade</Link>
-          <Link className="block hover:text-white" href="/reembolso">Política de reembolso</Link>
         </nav>
         <div className="space-y-2 text-sm">
           <p className="font-bold text-white">Contato</p>
           <a className="underline" href={`mailto:${env.contactEmail}`}>{env.contactEmail}</a>
         </div>
       </div>
-      <p className="border-t border-white/10 px-4 py-4 text-center text-xs">© {new Date().getFullYear()} Currículo IA. Todos os direitos reservados.</p>
+      <p className="border-t border-white/10 px-4 py-4 text-center text-xs">© {new Date().getFullYear()} Currículo Certo. Todos os direitos reservados.</p>
     </footer>
   );
 }

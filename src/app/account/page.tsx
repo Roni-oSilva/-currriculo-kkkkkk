@@ -18,7 +18,7 @@ export default async function Account() {
       <main id="conteudo" className="mx-auto max-w-2xl space-y-4 p-3 sm:p-5">
         <Card className="space-y-4"><h1 className="text-3xl font-extrabold">Minha conta</h1><p className="text-muted">{user.email}</p>
           <ProfileForm initialName={profile?.full_name ?? ""} />
-          <p className="text-sm text-muted">Consentimento de IA: {profile?.ai_consent_at ? `concedido em ${new Date(profile.ai_consent_at).toLocaleDateString("pt-BR")}` : "ainda não concedido"}.</p>
+          <p className="text-sm text-muted">Autorização do assistente de sugestões: {profile?.ai_consent_at ? `concedido em ${new Date(profile.ai_consent_at).toLocaleDateString("pt-BR")}` : "ainda não concedido"}.</p>
           <LogoutButton action={logoutAction} />
         </Card>
         <Card className="space-y-3"><h2 className="text-xl font-extrabold text-red-800">Excluir conta e dados</h2><DeleteAccount /></Card>

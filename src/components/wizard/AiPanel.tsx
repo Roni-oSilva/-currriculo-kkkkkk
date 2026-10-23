@@ -44,7 +44,7 @@ export function AiPanel({ resumeId, data, onApply, flush, hasConsent, aiEnabled 
       const json = await res.json();
       if (!res.ok) {
         if (json.code === "ai_consent_required") { setConsent(false); setPendingOp(op); setAskConsent(true); return; }
-        throw new Error(json.error ?? "Erro na IA");
+        throw new Error(json.error ?? "Erro no assistente");
       }
       setResult(json as AiResult);
     } catch (e) {
@@ -68,15 +68,15 @@ export function AiPanel({ resumeId, data, onApply, flush, hasConsent, aiEnabled 
   const reject = (s: Suggestion) => setResult((r) => (r ? { ...r, suggestions: r.suggestions.filter((x) => x.id !== s.id) } : r));
 
   if (!aiEnabled) {
-    return <Notice tone="warn">A IA ainda não foi configurada neste ambiente (veja docs/AI.md). Você pode continuar normalmente e ver a nota de aceitação abaixo.</Notice>;
+    return <Notice tone="warn">O assistente de sugestões ainda não foi ativado neste ambiente. Você pode continuar normalmente e ver a nota de aceitação acima.</Notice>;
   }
 
   const ops: [Op, string][] = [["summary", "Criar resumo profissional"], ["experience", "Melhorar experiências"], ["review", "Revisar texto e lacunas"], ["full", "Fazer tudo"]];
 
   return (
     <section aria-labelledby="ai-title" className="space-y-4 rounded-[24px] bg-white p-5 ring-1 ring-zinc-200">
-      <h3 id="ai-title" className="text-lg font-extrabold">Melhorar com IA</h3>
-      <p className="text-sm text-muted">A IA só reescreve o que você informou: não inventa empregos, datas, cursos, resultados ou habilidades. Você aprova cada sugestão antes de aplicar.</p>
+      <h3 id="ai-title" className="text-lg font-extrabold">Assistente de sugestões</h3>
+      <p className="text-sm text-muted">O assistente só reescreve o que você informou: não inventa empregos, datas, cursos, resultados ou habilidades. Você aprova cada sugestão antes de aplicar.</p>
       <div className="flex flex-wrap gap-2">
         {ops.map(([op, label]) => (
           <Button key={op} variant="outline" disabled={busy !== null} onClick={() => run(op)} className="!min-h-11 !px-4 !py-2 text-sm">{busy === op ? "Analisando…" : label}</Button>
@@ -85,7 +85,7 @@ export function AiPanel({ resumeId, data, onApply, flush, hasConsent, aiEnabled 
       <details className="rounded-xl bg-paper p-3">
         <summary className="cursor-pointer font-bold">Adaptar à vaga (opcional)</summary>
         <div className="mt-3 space-y-3">
-          <Field label="Descrição da vaga" htmlFor="job" hint="Cole o texto do anúncio. A IA destaca o que você já tem que combina com a vaga, sem acrescentar requisitos que você não possui.">
+          <Field label="Descrição da vaga" htmlFor="job" hint="Cole o texto do anúncio. O assistente destaca o que você já tem que combina com a vaga, sem acrescentar requisitos que você não possui.">
             <textarea id="job" value={job} onChange={(e) => setJob(e.target.value)} rows={5} maxLength={6000} className={inputCls} />
           </Field>
           <Button variant="primary" disabled={busy !== null || !job.trim()} onClick={() => run("tailor")} className="!min-h-11 text-sm">{busy === "tailor" ? "Adaptando…" : "Adaptar à vaga"}</Button>
@@ -94,8 +94,8 @@ export function AiPanel({ resumeId, data, onApply, flush, hasConsent, aiEnabled 
 
       {askConsent ? (
         <div role="dialog" aria-modal="true" aria-labelledby="consent-title" className="space-y-3 rounded-2xl border-2 border-brand bg-chip/40 p-4">
-          <h4 id="consent-title" className="font-extrabold">Autorizar envio à IA</h4>
-          <p className="text-sm">Para usar a IA, enviaremos o conteúdo profissional do currículo (experiências, formação, cursos, habilidades, projetos e a vaga, se informada) a um provedor de IA. Não enviamos e-mail, telefone, endereço, links nem foto. Veja a <a className="underline" href="/privacidade" target="_blank">Política de Privacidade</a>.</p>
+          <h4 id="consent-title" className="font-extrabold">Autorizar o assistente</h4>
+          <p className="text-sm">Para usar o assistente, enviaremos o conteúdo profissional do currículo (experiências, formação, cursos, habilidades, projetos e a vaga, se informada) a um serviço externo de análise de texto. Não enviamos e-mail, telefone, endereço, links nem foto. Veja a <a className="underline" href="/privacidade" target="_blank">Política de Privacidade</a>.</p>
           <div className="flex gap-2">
             <Button onClick={giveConsent} className="!min-h-11 text-sm">Autorizar e continuar</Button>
             <Button variant="ghost" onClick={() => setAskConsent(false)} className="!min-h-11 text-sm">Agora não</Button>

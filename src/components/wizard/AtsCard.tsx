@@ -13,7 +13,7 @@ export function AtsCard({ data, design, pageCount }: { data: ResumeData; design:
   const t = getTemplate(design.template);
   const color = report.verdict === "alta" ? "bg-emerald-600" : report.verdict === "boa" ? "bg-amber-500" : "bg-red-600";
   return (
-    <section aria-labelledby="ats-title" className="space-y-4 rounded-[24px] bg-white p-5 ring-1 ring-zinc-200">
+    <section aria-labelledby="ats-title" className="anim-pop space-y-4 rounded-[24px] bg-white p-5 ring-1 ring-zinc-200">
       <div className="flex items-center gap-4">
         <div className={`grid h-24 w-24 shrink-0 place-items-center rounded-3xl text-white ${color}`} aria-label={`Nota ${report.score.toString().replace(".", ",")} de 10`}>
           <span className="text-4xl font-extrabold">{report.score.toFixed(1).replace(".", ",")}<span className="text-base">/10</span></span>
@@ -25,7 +25,7 @@ export function AtsCard({ data, design, pageCount }: { data: ResumeData; design:
       </div>
       <ul className="space-y-2">
         {report.items.map((i) => (
-          <li key={i.id} className="rounded-xl bg-paper p-3 text-sm">
+          <li key={i.id} className="anim-up rounded-xl bg-paper p-3 text-sm" style={{ "--d": `${report.items.indexOf(i) * 50}ms` } as React.CSSProperties}>
             <p className="font-extrabold">{ICON[i.status]} {i.title} <span className="font-semibold text-muted">({i.points.toFixed(1).replace(".", ",")}/{i.max.toFixed(1).replace(".", ",")})</span></p>
             <p className="mt-0.5 text-muted">{i.tip}</p>
           </li>

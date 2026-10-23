@@ -12,14 +12,14 @@ export default function Page() {
         <li>Registros técnicos mínimos de segurança e erros, sem o conteúdo do currículo.</li>
       </ul>
       <h2>Finalidades e bases legais</h2>
-      <p>Execução do serviço contratado (criar e entregar o currículo), cumprimento de obrigação legal (registros fiscais de pagamento), legítimo interesse (segurança e prevenção a fraudes) e consentimento (uso de IA e foto).</p>
-      <h2>Envio de dados à IA</h2>
-      <p>Somente com o seu consentimento expresso, enviamos ao provedor de IA configurado o conteúdo profissional do currículo (experiências, formação, cursos, habilidades, projetos e a descrição da vaga, se informada). Não enviamos e-mail, telefone, endereço, links nem foto. Você pode usar o serviço sem a IA.</p>
+      <p>Execução do serviço contratado (criar e entregar o currículo), cumprimento de obrigação legal (registros fiscais de pagamento), legítimo interesse (segurança e prevenção a fraudes) e consentimento (uso do assistente e foto).</p>
+      <h2>Assistente de sugestões</h2>
+      <p>Somente com o seu consentimento expresso, enviamos ao serviço externo de análise de texto configurado o conteúdo profissional do currículo (experiências, formação, cursos, habilidades, projetos e a descrição da vaga, se informada). Não enviamos e-mail, telefone, endereço, links nem foto. Você pode usar o serviço sem o assistente.</p>
       <h2>Compartilhamento</h2>
-      <p>Supabase (banco, autenticação e armazenamento), Mercado Pago (pagamentos) e o provedor de IA configurado, como operadores, e autoridades quando exigido por lei.</p>
+      <p>Supabase (banco, autenticação e armazenamento), Mercado Pago (pagamentos) e o serviço de análise de texto configurado, como operadores, e autoridades quando exigido por lei.</p>
       <h2>Retenção e exclusão</h2>
       <ul>
-        <li>Você pode excluir currículos a qualquer momento e excluir a conta em “Minha conta”, o que apaga currículos, fotos, PDFs e histórico de IA.</li>
+        <li>Você pode excluir currículos a qualquer momento e excluir a conta em “Minha conta”, o que apaga currículos, fotos, PDFs e histórico do assistente.</li>
         <li>Registros de pagamento são mantidos sem vínculo com a sua identidade pelo prazo exigido por obrigações fiscais.</li>
         <li>Rascunhos sem compra e sem atividade por 18 meses são removidos automaticamente.</li>
       </ul>

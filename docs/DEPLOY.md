@@ -51,4 +51,4 @@
 | `CRON_SECRET` | para retenção | protege `/api/cron/retention` |
 
 ## 4. Textos legais
-Preencha razão social/CNPJ/endereço e peça revisão jurídica das páginas `/termos`, `/privacidade` e `/reembolso` antes de abrir ao público.
+Preencha razão social/CNPJ/endereço e peça revisão jurídica das páginas `/termos` e `/privacidade` antes de abrir ao público.

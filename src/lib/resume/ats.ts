@@ -44,7 +44,7 @@ export function estimatePages(d: ResumeData): number {
 
 /**
  * Nota de 0 a 10 de aderência a ATS/RH para o modelo escolhido. Regras determinísticas
- * (sem IA): estrutura recomendada, resumo, experiência em ordem cronológica inversa com
+ * (sem serviços externos): estrutura recomendada, resumo, experiência em ordem cronológica inversa com
  * resultados mensuráveis, formação, habilidades, tamanho e compatibilidade do modelo.
  */
 export function scoreResume(d: ResumeData, design: ResumeDesign, pageCount?: number): AtsReport {

@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-const PUBLIC = ["/", "/login", "/cadastro", "/esqueci-senha", "/termos", "/privacidade", "/reembolso", "/configuracao-pendente"];
+const PUBLIC = ["/", "/login", "/cadastro", "/esqueci-senha", "/termos", "/privacidade", "/configuracao-pendente"];
 
 for (const path of PUBLIC) {
   test(`sem rolagem horizontal e com landmarks: ${path}`, async ({ page }) => {
@@ -17,7 +17,7 @@ test("landing: chamada principal, preço, FAQ e rodapé legal", async ({ page })
   await expect(page.getByRole("link", { name: "Criar meu currículo" }).first()).toBeVisible();
   await expect(page.locator("#preco")).toContainText("R$");
   await expect(page.locator("#duvidas details")).not.toHaveCount(0);
-  for (const name of ["Termos de uso", "Política de privacidade", "Política de reembolso"]) await expect(page.getByRole("link", { name })).toBeVisible();
+  for (const name of ["Termos de uso", "Política de privacidade"]) await expect(page.getByRole("link", { name })).toBeVisible();
   await expect(page.locator("body")).not.toContainText(/depoimento|clientes satisfeitos/i);
 });
 

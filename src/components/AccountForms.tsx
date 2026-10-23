@@ -33,7 +33,7 @@ export function DeleteAccount() {
   }
   return (
     <div className="space-y-3">
-      <p className="text-sm text-muted">Apaga sua conta, currículos, fotos, PDFs e histórico de IA. Registros de pagamento permanecem sem vínculo com você, por obrigação fiscal. Não há como desfazer.</p>
+      <p className="text-sm text-muted">Apaga sua conta, currículos, fotos, PDFs e histórico do assistente. Registros de pagamento permanecem sem vínculo com você, por obrigação fiscal. Não há como desfazer.</p>
       <Field label="Digite EXCLUIR para confirmar" htmlFor="del-confirm"><input id="del-confirm" value={confirm} onChange={(e) => setConfirm(e.target.value)} className={inputCls} autoComplete="off" /></Field>
       <Button variant="danger" onClick={del} disabled={busy || confirm !== "EXCLUIR"}>{busy ? "Excluindo…" : "Excluir minha conta e meus dados"}</Button>
       {err ? <Notice tone="error">{err}</Notice> : null}

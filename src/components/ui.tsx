@@ -2,10 +2,11 @@ import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 
 const base =
-  "inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-base font-bold transition focus-visible:outline-offset-4 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex select-none min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-base font-bold transition duration-200 hover:-translate-y-0.5 focus-visible:outline-offset-4 disabled:cursor-not-allowed disabled:opacity-60";
 const variants = {
   primary: "bg-brand text-white hover:bg-brand-dark",
   light: "bg-white text-brand-dark hover:bg-chip",
+  accent: "bg-accent text-navy hover:bg-accent-dark shadow-[0_6px_0_-2px_rgba(12,22,51,.25)]",
   outline: "border-2 border-brand text-brand hover:bg-brand hover:text-white",
   ghost: "text-ink hover:bg-black/5",
   danger: "bg-red-700 text-white hover:bg-red-800",
@@ -25,7 +26,7 @@ export function Button({ variant = "primary", className = "", ...p }: ComponentP
 }
 
 export function Marker({ children }: { children: ReactNode }) {
-  return <span className="marker">{children}</span>;
+  return <span className="marker"><span className="marker-bg" aria-hidden />{children}</span>;
 }
 
 export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
@@ -34,9 +35,9 @@ export function Card({ children, className = "" }: { children: ReactNode; classN
 
 export function Logo({ light = false }: { light?: boolean }) {
   return (
-    <Link href="/" className={`flex items-center gap-2 text-xl font-extrabold ${light ? "text-white" : "text-ink"}`} aria-label="Currículo IA — página inicial">
+    <Link href="/" className={`flex items-center gap-2 text-xl font-extrabold ${light ? "text-white" : "text-ink"}`} aria-label="Currículo Certo — página inicial">
       <span className="grid h-9 w-9 place-items-center rounded-xl bg-brand text-white" aria-hidden>CV</span>
-      Currículo<span className="text-brand">IA</span>
+      Currículo<span className={light ? "text-accent" : "text-brand"}>Certo</span>
     </Link>
   );
 }

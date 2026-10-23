@@ -4,8 +4,8 @@ import { env } from "@/lib/env";
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.appUrl),
-  title: { default: "Currículo IA — currículo profissional em minutos", template: "%s | Currículo IA" },
-  description: "Crie um currículo profissional com ajuda de IA, veja a nota de aceitação (0 a 10) para o modelo escolhido e baixe em PDF por R$ 7,99.",
+  title: { default: "Currículo Certo — currículo profissional em minutos", template: "%s | Currículo Certo" },
+  description: "Crie um currículo profissional, veja a nota de aceitação (0 a 10) para o modelo escolhido e baixe em PDF por R$ 7,99.",
 };
 export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#26262b" };
 

@@ -1,6 +1,6 @@
-# Currículo IA
+# Currículo Certo
 
-Plataforma web para criar currículos profissionais com apoio de IA. Prévia gratuita protegida; PDF sem marca d'água liberado após pagamento Pix (R$ 7,99 por currículo) confirmado no servidor.
+Plataforma web para criar currículos profissionais com assistente de sugestões. Prévia gratuita protegida; PDF sem marca d'água liberado após pagamento Pix (R$ 7,99 por currículo) confirmado no servidor.
 
 **Stack:** Next.js 15 (App Router, TypeScript) · Tailwind CSS 4 · Supabase (Postgres, Auth, Storage privado) · Mercado Pago (Pix) · `@react-pdf/renderer` (PDF no servidor) · Zod · Vitest + PGlite + Playwright.
 
@@ -11,8 +11,8 @@ Plataforma web para criar currículos profissionais com apoio de IA. Prévia gra
 | Landing page (exemplos reais dos modelos, 3 etapas, preço, FAQ, rodapé legal) | ✅ |
 | Cadastro, login, logout, recuperação de senha, rotas protegidas | ✅ (precisa do Supabase) |
 | Assistente em etapas A–G + modelo + revisão, salvamento automático, reordenar seções | ✅ |
-| **Nota de aceitação 0–10 (RH/ATS) para o modelo escolhido**, com dicas, atualizada ao vivo | ✅ (regras determinísticas, sem IA) |
-| IA configurável (Anthropic ou compatível com OpenAI), sugestões aprovadas pelo usuário, guarda contra fatos inventados | ✅ (precisa de chave) |
+| **Nota de aceitação 0–10 (RH/ATS) para o modelo escolhido**, com dicas, atualizada ao vivo | ✅ (regras determinísticas, sem serviços externos) |
+| Assistente de sugestões configurável (Anthropic ou compatível com OpenAI), sugestões aprovadas pelo usuário, guarda contra fatos inventados | ✅ (precisa de chave) |
 | 5 modelos (Clássico, Moderno, Minimalista, Primeiro emprego, Criativo), 8 cores, foto opcional | ✅ |
 | Prévia protegida: imagens PNG com marca d'água gravada, sem PDF/URL permanente | ✅ |
 | Pix Mercado Pago, webhook com assinatura, validação por consulta ao provedor, idempotência | ✅ (precisa de credenciais) |

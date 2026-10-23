@@ -205,7 +205,7 @@ export function ResumePdf({ data, design, photo, watermark, title }: ResumePdfPr
   }
 
   return (
-    <Document title={title ?? `Currículo ${p.fullName}`.trim()} author={p.fullName || undefined} creator="Currículo IA" producer="Currículo IA" language="pt-BR">
+    <Document title={title ?? `Currículo ${p.fullName}`.trim()} author={p.fullName || undefined} creator="Currículo Certo" producer="Currículo Certo" language="pt-BR">
       <Page size="A4" style={s.page}>
         {header}
         {sections.map((key) => (
