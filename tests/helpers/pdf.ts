@@ -1,8 +1,5 @@
-import { countPages } from "@/lib/pdf/rasterize";
-
 /** Extrai o texto selecionável de um PDF (prova de que não é imagem). */
 export async function extractText(pdf: Uint8Array): Promise<string> {
-  await countPages(pdf); // garante polyfills do pdfjs
   const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
   const doc = await pdfjs.getDocument({ data: new Uint8Array(pdf), verbosity: 0 }).promise;
   let out = "";

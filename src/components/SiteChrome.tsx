@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { Logo, LinkButton } from "./ui";
+import { ScrollProgress } from "./Motion";
 import { env } from "@/lib/env";
 
 export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
   return (
-    <header className="sticky top-0 z-30 border-b border-white/10 bg-char/95 backdrop-blur">
+    <>
+    <ScrollProgress />
+    <header className="site-header sticky top-0 z-30 border-b border-white/10 bg-char/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
         <Logo light />
         <nav aria-label="Principal" className="hidden items-center gap-6 text-sm font-semibold text-white/85 md:flex [&_a]:link-u">
@@ -26,6 +29,7 @@ export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
         </div>
       </div>
     </header>
+    </>
   );
 }
 
@@ -35,7 +39,7 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-3">
         <div className="space-y-3">
           <Logo light />
-          <p className="text-sm">Currículos profissionais, claros e prontos para o RH. Sem inventar nada sobre você.</p>
+          <p className="text-sm">Currículos profissionais, claros e alinhados às expectativas do RH.</p>
         </div>
         <nav aria-label="Rodapé" className="space-y-2 text-sm font-semibold">
           <Link className="block hover:text-white" href="/termos">Termos de uso</Link>

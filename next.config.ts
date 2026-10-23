@@ -11,16 +11,7 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   // Pacotes nativos / com arquivos auxiliares não devem ser empacotados.
-  serverExternalPackages: ["sharp", "@napi-rs/canvas", "pdfjs-dist", "@react-pdf/renderer"],
-  // pdfjs precisa dos arquivos de fontes padrão em tempo de execução.
-  outputFileTracingIncludes: {
-    "/api/**/*": [
-      "./node_modules/pdfjs-dist/standard_fonts/**/*",
-      "./node_modules/pdfjs-dist/legacy/build/**/*",
-      "./node_modules/@napi-rs/canvas*/**/*",
-      "./node_modules/@napi-rs/canvas-linux-x64-gnu/**/*",
-    ],
-  },
+  serverExternalPackages: ["sharp", "@react-pdf/renderer", "@hyzyla/pdfium"],
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },

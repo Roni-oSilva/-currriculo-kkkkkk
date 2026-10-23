@@ -18,15 +18,15 @@ const STATUS_TEXT: Record<SaveStatus, string> = {
 };
 
 const TIPS = [
-  "Use um e-mail profissional. Cidade e estado bastam: não precisa de endereço completo, CPF ou RG.",
-  "Diga qual vaga você busca e resuma sua trajetória em 3 a 5 linhas. Use palavras da descrição da vaga.",
-  "Da mais recente para a mais antiga. Descreva o que fazia e, se souber, resultados com números reais.",
-  "Informe curso, instituição e ano de conclusão (ou previsão). Em andamento também vale.",
-  "Cursos e certificados reforçam o currículo, principalmente para quem está começando.",
-  "Liste softwares, ferramentas e competências em texto. Evite barras ou porcentagens de nível.",
-  "Idiomas com nível real, projetos, voluntariado e prêmios. Tudo opcional.",
-  "Clássico e Minimalista são os mais aceitos por RH e por sistemas de triagem. Dá para trocar a qualquer momento.",
-  "Confira a nota, aplique as dicas e só então veja a prévia. Você pode voltar e mudar quando quiser.",
+  "Utilize um e-mail profissional. Cidade e estado são suficientes; dispensam-se endereço completo, CPF e RG.",
+  "Indique a posição pretendida e resuma sua trajetória em três a cinco linhas, incorporando palavras-chave da vaga.",
+  "Ordene da mais recente para a mais antiga. Descreva suas atividades e, quando possível, resultados mensuráveis e reais.",
+  "Informe curso, instituição e ano de conclusão (ou previsão). Formações em andamento também devem constar.",
+  "Cursos e certificados reforçam o perfil, sobretudo para quem está no início da carreira.",
+  "Liste softwares, ferramentas e competências em texto corrido, evitando barras ou percentuais de nível.",
+  "Idiomas com nível real, projetos, voluntariado e prêmios. Todos os campos são opcionais.",
+  "Clássico e Minimalista são os formatos mais aceitos por RH e por sistemas de triagem. O modelo pode ser trocado a qualquer momento.",
+  "Confira a nota, aplique as recomendações e então visualize a prévia. Você pode retornar e ajustar sempre que desejar.",
 ] as const;
 
 const uid = () => crypto.randomUUID();

@@ -13,7 +13,7 @@ Plataforma web para criar currículos profissionais com assistente de sugestões
 | Assistente em etapas A–G + modelo + revisão, salvamento automático, reordenar seções | ✅ |
 | **Nota de aceitação 0–10 (RH/ATS) para o modelo escolhido**, com dicas, atualizada ao vivo | ✅ (regras determinísticas, sem serviços externos) |
 | Assistente de sugestões configurável (Anthropic ou compatível com OpenAI), sugestões aprovadas pelo usuário, guarda contra fatos inventados | ✅ (precisa de chave) |
-| 5 modelos (Clássico, Moderno, Minimalista, Primeiro emprego, Criativo), 8 cores, foto opcional | ✅ |
+| 5 modelos de design distinto (Clássico, Moderno com foto, Minimalista, Primeiro emprego, Criativo com foto grande), 8 cores | ✅ |
 | Prévia protegida: imagens PNG com marca d'água gravada, sem PDF/URL permanente | ✅ |
 | Pix Mercado Pago, webhook com assinatura, validação por consulta ao provedor, idempotência | ✅ (precisa de credenciais) |
 | PDF final no servidor, download por URL assinada de 60 s, revalidado a cada requisição | ✅ |

@@ -12,7 +12,7 @@ export async function POST(req: Request) {
   const template = (TEMPLATE_IDS as readonly string[]).includes(body?.template) ? (body.template as TemplateId) : "classic";
   const t = getTemplate(template);
   const base = emptyResume();
-  const design = { ...base.design, template, accent: t.defaultAccent, sectionOrder: t.defaultOrder, showPhoto: false };
+  const design = { ...base.design, template, accent: t.defaultAccent, sectionOrder: t.defaultOrder, showPhoto: t.supportsPhoto };
 
   const { count } = await ctx.supabase.from("resumes").select("id", { count: "exact", head: true });
   if ((count ?? 0) >= 30) return jsonError("Limite de 30 currículos atingido. Exclua algum para criar outro.", 409);

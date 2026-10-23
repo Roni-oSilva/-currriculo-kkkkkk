@@ -4,9 +4,9 @@ import type { ComponentProps, ReactNode } from "react";
 const base =
   "inline-flex select-none min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-base font-bold transition duration-200 hover:-translate-y-0.5 focus-visible:outline-offset-4 disabled:cursor-not-allowed disabled:opacity-60";
 const variants = {
-  primary: "bg-brand text-white hover:bg-brand-dark",
+  primary: "btn-shine bg-brand text-white hover:bg-brand-dark",
   light: "bg-white text-brand-dark hover:bg-chip",
-  accent: "bg-accent text-navy hover:bg-accent-dark shadow-[0_6px_0_-2px_rgba(12,22,51,.25)]",
+  accent: "btn-shine bg-accent text-navy hover:bg-accent-dark shadow-[0_6px_0_-2px_rgba(12,22,51,.25)]",
   outline: "border-2 border-brand text-brand hover:bg-brand hover:text-white",
   ghost: "text-ink hover:bg-black/5",
   danger: "bg-red-700 text-white hover:bg-red-800",
@@ -35,8 +35,10 @@ export function Card({ children, className = "" }: { children: ReactNode; classN
 
 export function Logo({ light = false }: { light?: boolean }) {
   return (
-    <Link href="/" className={`flex items-center gap-2 text-xl font-extrabold ${light ? "text-white" : "text-ink"}`} aria-label="Currículo Certo — página inicial">
-      <span className="grid h-9 w-9 place-items-center rounded-xl bg-brand text-white" aria-hidden>CV</span>
+    <Link href="/" className={`group/logo flex items-center gap-2 text-xl font-extrabold ${light ? "text-white" : "text-ink"}`} aria-label="Currículo Certo — página inicial">
+      <span className="grid h-9 w-9 place-items-center rounded-xl bg-brand text-white transition-transform duration-300 group-hover/logo:rotate-6" aria-hidden>
+        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 3h7l5 5v13H7z" /><path d="M14 3v5h5M10 13h6M10 17h4" /></svg>
+      </span>
       Currículo<span className={light ? "text-accent" : "text-brand"}>Certo</span>
     </Link>
   );

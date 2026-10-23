@@ -41,7 +41,6 @@
 | Variável | Obrigatória | Uso |
 |---|---|---|
 | `NEXT_PUBLIC_APP_URL` | sim | links de e-mail, `notification_url` do Pix |
-| `NEXT_PUBLIC_CONTACT_EMAIL` | sim | rodapé e páginas legais |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | sim | login e dados do usuário (RLS) |
 | `SUPABASE_SERVICE_ROLE_KEY` | sim | servidor: pagamentos, PDFs, admin |
 | `AI_PROVIDER`, `AI_API_KEY`, `AI_MODEL`, `AI_BASE_URL` | para usar IA | veja `docs/AI.md` |

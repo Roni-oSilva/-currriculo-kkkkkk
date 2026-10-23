@@ -2,11 +2,12 @@
  * Acesso centralizado e tipado às variáveis de ambiente. Nenhum segredo é lido no cliente:
  * apenas variáveis NEXT_PUBLIC_* chegam ao navegador.
  */
+export const CONTACT_EMAIL = "miraclestudio.land@gmail.com";
 const read = (k: string) => (process.env[k] ?? "").trim();
 
 export const env = {
   get appUrl() { return read("NEXT_PUBLIC_APP_URL") || "http://localhost:3000"; },
-  get contactEmail() { return read("NEXT_PUBLIC_CONTACT_EMAIL") || "contato@exemplo.com.br"; },
+  get contactEmail() { return CONTACT_EMAIL; },
   get supabaseUrl() { return read("NEXT_PUBLIC_SUPABASE_URL"); },
   get supabaseAnonKey() { return read("NEXT_PUBLIC_SUPABASE_ANON_KEY"); },
   get supabaseServiceKey() { return read("SUPABASE_SERVICE_ROLE_KEY"); },

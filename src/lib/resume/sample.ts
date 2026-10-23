@@ -1,5 +1,6 @@
 import { resumePayloadSchema, type ResumePayload, type TemplateId } from "./schema";
 import { getTemplate } from "./templates";
+import sharp from "sharp";
 
 /** Dados ilustrativos usados apenas nos exemplos da página inicial e em testes. */
 export function sampleResume(template: TemplateId): ResumePayload {
@@ -7,7 +8,7 @@ export function sampleResume(template: TemplateId): ResumePayload {
   const firstJob = template === "first-job";
   return resumePayloadSchema.parse({
     title: "Exemplo",
-    design: { template, accent: t.defaultAccent, showPhoto: false, sectionOrder: t.defaultOrder },
+    design: { template, accent: t.defaultAccent, showPhoto: t.supportsPhoto && template !== "classic", sectionOrder: t.defaultOrder },
     data: {
       personal: {
         fullName: "Maria Exemplo da Silva",
@@ -36,4 +37,10 @@ export function sampleResume(template: TemplateId): ResumePayload {
       extras: { languages: [{ name: "Português", level: "Nativo" }, { name: "Inglês", level: "Básico" }] },
     },
   });
+}
+
+/** Avatar ilustrativo (silhueta) usado só nos exemplos e testes. */
+export async function samplePhoto(): Promise<Buffer> {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#dbe4f5"/><stop offset="1" stop-color="#9db4de"/></linearGradient></defs><rect width="400" height="400" fill="url(#g)"/><circle cx="200" cy="155" r="68" fill="#5b6b8c"/><path d="M60 400 C60 290 130 250 200 250 C270 250 340 290 340 400 Z" fill="#5b6b8c"/></svg>`;
+  return sharp(Buffer.from(svg)).jpeg({ quality: 88 }).toBuffer();
 }

@@ -51,3 +51,50 @@ export function Sticker({ className = "" }: { className?: string }) {
     </svg>
   );
 }
+
+/** Barra de progresso de rolagem e sombra do cabeçalho ao rolar. */
+export function ScrollProgress() {
+  const bar = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight;
+      if (bar.current) bar.current.style.transform = `scaleX(${max > 0 ? Math.min(1, h.scrollTop / max) : 0})`;
+      h.classList.toggle("scrolled", h.scrollTop > 8);
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => { window.removeEventListener("scroll", onScroll); if (raf) cancelAnimationFrame(raf); };
+  }, []);
+  return <div aria-hidden className="pointer-events-none fixed inset-x-0 top-0 z-50 h-1"><div ref={bar} className="h-full origin-left bg-accent" style={{ transform: "scaleX(0)" }} /></div>;
+}
+
+/** Título com palavras entrando em sequência. */
+export function Words({ text, className = "", start = 0 }: { text: string; className?: string; start?: number }) {
+  return (
+    <>
+      {text.split(" ").map((w, i) => (
+        <span key={i} className={`inline-block overflow-hidden align-bottom ${className}`}>
+          <span className="word-in inline-block" style={{ "--d": `${start + i * 70}ms` } as React.CSSProperties}>{w}&nbsp;</span>
+        </span>
+      ))}
+    </>
+  );
+}
+
+/** Faixa de itens em movimento contínuo e suave. */
+export function Marquee({ items }: { items: string[] }) {
+  const row = (hidden: boolean) => (
+    <ul aria-hidden={hidden} className="marquee-row flex shrink-0 items-center gap-10 pr-10">
+      {items.map((t) => (
+        <li key={t} className="flex items-center gap-10 whitespace-nowrap text-sm font-bold uppercase tracking-widest text-white/80">
+          {t}<span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+        </li>
+      ))}
+    </ul>
+  );
+  return <div className="marquee overflow-hidden py-4">{<div className="flex w-max">{row(false)}{row(true)}</div>}</div>;
+}

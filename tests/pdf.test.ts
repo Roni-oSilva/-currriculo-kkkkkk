@@ -69,3 +69,39 @@ describe("geração de PDF", () => {
     expect(resumeFileName({ ...s.data, personal: { ...s.data.personal, fullName: "José Ângelo D'Ávila/../x" } })).toBe("Curriculo_Jose_Angelo_D_Avila_x.pdf");
   });
 });
+
+describe("modelos com designs distintos", () => {
+  const pixel = async (dataUrl: string, xf: number, yf: number) => {
+    const { data, info } = await sharp(Buffer.from(dataUrl.split(",")[1], "base64")).raw().toBuffer({ resolveWithObject: true });
+    const i = (Math.floor(info.height * yf) * info.width + Math.floor(info.width * xf)) * info.channels;
+    return [data[i], data[i + 1], data[i + 2]];
+  };
+  it("barra lateral à esquerda (Moderno) e à direita (Criativo); coluna única continua branca", async () => {
+    const { samplePhoto } = await import("@/lib/resume/sample");
+    const shots: Record<string, string> = {};
+    for (const t of TEMPLATE_IDS) {
+      const s = sampleResume(t);
+      const pdf = await renderFinalPdf({ data: s.data, design: s.design, photo: s.design.showPhoto ? await samplePhoto() : null });
+      shots[t] = (await rasterizePdf(pdf, 0.6)).pages[0];
+    }
+    expect(await pixel(shots.modern, 0.03, 0.9)).not.toEqual([255, 255, 255]);
+    expect(await pixel(shots.modern, 0.97, 0.9)).toEqual([255, 255, 255]);
+    expect(await pixel(shots.creative, 0.97, 0.9)).not.toEqual([255, 255, 255]);
+    expect(await pixel(shots.creative, 0.03, 0.9)).toEqual([255, 255, 255]);
+    for (const t of ["classic", "minimal", "first-job"]) {
+      expect(await pixel(shots[t], 0.03, 0.9)).toEqual([255, 255, 255]);
+      expect(await pixel(shots[t], 0.97, 0.9)).toEqual([255, 255, 255]);
+    }
+    expect(new Set(Object.values(shots)).size).toBe(5);
+  });
+  it("modelos com foto embutem a imagem; classic e minimal sem foto não aumentam o arquivo", async () => {
+    const { samplePhoto } = await import("@/lib/resume/sample");
+    const photo = await samplePhoto();
+    for (const t of ["modern", "first-job", "creative"] as const) {
+      const s = sampleResume(t);
+      const a = await renderFinalPdf({ data: s.data, design: { ...s.design, showPhoto: true }, photo });
+      const b = await renderFinalPdf({ data: s.data, design: { ...s.design, showPhoto: false }, photo: null });
+      expect(a.length).toBeGreaterThan(b.length + 1500);
+    }
+  });
+});
