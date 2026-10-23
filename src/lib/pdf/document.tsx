@@ -3,12 +3,12 @@ import { Document, Font, Image, Link, Page, StyleSheet, Text, View } from "@reac
 import type { ResumeData, ResumeDesign, SectionKey } from "@/lib/resume/schema";
 import { SECTION_LABELS, accentHex } from "@/lib/resume/schema";
 import { getTemplate } from "@/lib/resume/templates";
-import { contactItems, formatMonth, formatPeriod, lines, visibleSections } from "@/lib/resume/format";
+import { brl, contactItems, formatMonth, formatPeriod, lines, visibleSections } from "@/lib/resume/format";
 
 // Evita quebrar palavras com hífen automático (prejudica leitura por ATS).
 Font.registerHyphenationCallback((word) => [word]);
 
-export const PREVIEW_WATERMARK = "PRÉVIA — DESBLOQUEIE POR R$ 7,99";
+export const previewWatermark = (priceCents: number) => `PRÉVIA — DESBLOQUEIE POR ${brl(priceCents)}`;
 
 export interface ResumePdfProps {
   data: ResumeData;

@@ -9,7 +9,7 @@
 
 ## Fluxo implementado
 1. Usuário clica **Desbloquear meu currículo** → `POST /api/payments {resumeId}`.
-2. Servidor confere a sessão e a propriedade (RLS), lê o **preço em `app_settings`** (799 centavos) e a **versão do banco** — nada disso vem do navegador.
+2. Servidor confere a sessão e a propriedade (RLS), lê o **preço em `app_settings`** (1000 centavos = R$ 10,00) e a **versão do banco** — nada disso vem do navegador.
 3. Cria linha `payments` (`pending`, `expires_at`) e chama `POST /v1/payments` (Pix) com `external_reference = payments.id`, `X-Idempotency-Key` e metadados (`user_id`, `resume_id`, `resume_version`). Índice único parcial impede duas cobranças pendentes para a mesma versão.
 4. A interface mostra QR Code e *copia e cola*, e consulta `GET /api/payments/:id` a cada 4 s (o **servidor** consulta o provedor).
 5. Webhook (`src/lib/payments/webhook.ts`): valida `x-signature` (HMAC-SHA256, `ts` com tolerância), usa **apenas o id** do corpo, **consulta a cobrança no Mercado Pago** e confere (`core.ts`):

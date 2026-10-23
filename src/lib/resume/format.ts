@@ -15,6 +15,11 @@ export function formatPeriod(start: string, end: string, current: boolean, curre
   return s || e || "";
 }
 
+/** 1000 → "R$ 10,00" (sem caracteres especiais, seguro para a marca d'água do PDF). */
+export function brl(cents: number): string {
+  return `R$ ${(cents / 100).toFixed(2).replace(".", ",")}`;
+}
+
 export function lines(value: string): string[] {
   return value
     .split("\n")

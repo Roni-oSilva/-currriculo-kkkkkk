@@ -1,6 +1,6 @@
 # Currículo Certo
 
-Plataforma web para criar currículos profissionais com assistente de sugestões. Prévia gratuita protegida; PDF sem marca d'água liberado após pagamento Pix (R$ 7,99 por currículo) confirmado no servidor.
+Plataforma web para criar currículos profissionais com assistente de sugestões. Prévia gratuita protegida; PDF sem marca d'água liberado após pagamento Pix (R$ 10,00 por currículo) confirmado no servidor.
 
 **Stack:** Next.js 15 (App Router, TypeScript) · Tailwind CSS 4 · Supabase (Postgres, Auth, Storage privado) · Mercado Pago (Pix) · `@react-pdf/renderer` (PDF no servidor) · Zod · Vitest + PGlite + Playwright.
 

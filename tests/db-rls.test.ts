@@ -41,7 +41,7 @@ describe("migrações e RLS", () => {
 
   it("usuário não consegue escrever em payments, resume_files, ai_generations ou logs", async () => {
     await expect(asUser(db, alice, () =>
-      db.query("insert into payments (user_id, resume_id, resume_version, amount_cents, idempotency_key, status) values ($1,$2,1,799,'k1','approved')", [alice, aliceResume]))).rejects.toThrow();
+      db.query("insert into payments (user_id, resume_id, resume_version, amount_cents, idempotency_key, status) values ($1,$2,1,1000,'k1','approved')", [alice, aliceResume]))).rejects.toThrow();
     await expect(asUser(db, alice, () => db.query("insert into event_logs (type) values ('x')"))).rejects.toThrow();
     await expect(asUser(db, alice, () => db.query("insert into ai_generations (user_id, operation) values ($1, 'summary')", [alice]))).rejects.toThrow();
     await expect(asUser(db, alice, () => db.query("update app_settings set value = '1'::jsonb where key = 'price_cents'"))).rejects.toThrow();
@@ -53,27 +53,27 @@ describe("migrações e RLS", () => {
   });
 
   it("ninguém além do dono lê pagamentos", async () => {
-    await db.query("insert into payments (user_id, resume_id, resume_version, amount_cents, idempotency_key) values ($1,$2,1,799,'k-own')", [alice, aliceResume]);
+    await db.query("insert into payments (user_id, resume_id, resume_version, amount_cents, idempotency_key) values ($1,$2,1,1000,'k-own')", [alice, aliceResume]);
     expect((await asUser(db, bob, () => db.query("select * from payments"))).rows).toHaveLength(0);
     expect((await asUser(db, alice, () => db.query("select * from payments"))).rows).toHaveLength(1);
   });
 
   it("restringe valor e moeda de pagamentos", async () => {
     await expect(db.query("insert into payments (user_id, resume_id, resume_version, amount_cents, idempotency_key) values ($1,$2,1,0,'k-zero')", [alice, aliceResume])).rejects.toThrow();
-    await expect(db.query("insert into payments (user_id, resume_id, resume_version, amount_cents, currency, idempotency_key) values ($1,$2,1,799,'USD','k-usd')", [alice, aliceResume])).rejects.toThrow();
+    await expect(db.query("insert into payments (user_id, resume_id, resume_version, amount_cents, currency, idempotency_key) values ($1,$2,1,1000,'USD','k-usd')", [alice, aliceResume])).rejects.toThrow();
   });
 
   it("garante unicidade do identificador do provedor (idempotência)", async () => {
-    await db.query("insert into payments (user_id, resume_id, resume_version, amount_cents, idempotency_key, provider_payment_id, status) values ($1,$2,1,799,'k-a','PROV-1','cancelled')", [alice, aliceResume]);
-    await expect(db.query("insert into payments (user_id, resume_id, resume_version, amount_cents, idempotency_key, provider_payment_id, status) values ($1,$2,1,799,'k-b','PROV-1','cancelled')", [alice, aliceResume])).rejects.toThrow();
+    await db.query("insert into payments (user_id, resume_id, resume_version, amount_cents, idempotency_key, provider_payment_id, status) values ($1,$2,1,1000,'k-a','PROV-1','cancelled')", [alice, aliceResume]);
+    await expect(db.query("insert into payments (user_id, resume_id, resume_version, amount_cents, idempotency_key, provider_payment_id, status) values ($1,$2,1,1000,'k-b','PROV-1','cancelled')", [alice, aliceResume])).rejects.toThrow();
   });
 
   it("permite no máximo uma cobrança pendente por currículo/versão", async () => {
-    await expect(db.query("insert into payments (user_id, resume_id, resume_version, amount_cents, idempotency_key) values ($1,$2,1,799,'k-dup-pending')", [alice, aliceResume])).rejects.toThrow(/payments_one_pending_idx|unique|duplicate/i);
+    await expect(db.query("insert into payments (user_id, resume_id, resume_version, amount_cents, idempotency_key) values ($1,$2,1,1000,'k-dup-pending')", [alice, aliceResume])).rejects.toThrow(/payments_one_pending_idx|unique|duplicate/i);
   });
 
   it("não permite voltar um pagamento aprovado para pendente nem alterar o valor", async () => {
-    const r = await db.query<{ id: string }>("insert into payments (user_id, resume_id, resume_version, amount_cents, idempotency_key, status) values ($1,$2,1,799,'k-appr','approved') returning id", [alice, aliceResume]);
+    const r = await db.query<{ id: string }>("insert into payments (user_id, resume_id, resume_version, amount_cents, idempotency_key, status) values ($1,$2,1,1000,'k-appr','approved') returning id", [alice, aliceResume]);
     const id = r.rows[0].id;
     await expect(db.query("update payments set status = 'pending' where id = $1", [id])).rejects.toThrow(/Transição/);
     await expect(db.query("update payments set amount_cents = 1 where id = $1", [id])).rejects.toThrow(/imutáveis/);
@@ -87,7 +87,7 @@ describe("migrações e RLS", () => {
     await asUser(db, bob, () => db.query("update resumes set data = '{\"a\":2}' where id = $1", [fresh]));
     expect((await db.query("select version from resumes where id = $1", [fresh])).rows[0]).toMatchObject({ version: 1 });
     // com cobrança pendente na v1: editar sela v1 e cria v2
-    await db.query("insert into payments (user_id, resume_id, resume_version, amount_cents, idempotency_key) values ($1,$2,1,799,'k-v1')", [bob, fresh]);
+    await db.query("insert into payments (user_id, resume_id, resume_version, amount_cents, idempotency_key) values ($1,$2,1,1000,'k-v1')", [bob, fresh]);
     await asUser(db, bob, () => db.query("update resumes set data = '{\"a\":3}' where id = $1", [fresh]));
     expect((await db.query("select version from resumes where id = $1", [fresh])).rows[0]).toMatchObject({ version: 2 });
     expect((await db.query("select data from resume_versions where resume_id = $1 and version = 1", [fresh])).rows[0]).toMatchObject({ data: { a: 2 } });

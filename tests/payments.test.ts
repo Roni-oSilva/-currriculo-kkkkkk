@@ -8,9 +8,10 @@ import { MemoryStore, makeProvider, makeRecord } from "./helpers/memory-store";
 const ID = "11111111-1111-4111-8111-111111111111";
 
 describe("mapeamento de status e valores", () => {
-  it("converte R$ 7,99 em 799 sem erro de ponto flutuante", () => {
+  it("converte R$ 10,00 em 1000 sem erro de ponto flutuante", () => {
+    expect(toCents(10)).toBe(1000);
+    expect(toCents("10.00")).toBe(1000);
     expect(toCents(7.99)).toBe(799);
-    expect(toCents("7.99")).toBe(799);
     expect(toCents(0.1 + 0.2)).toBe(30);
     expect(toCents(undefined)).toBeNull();
   });
@@ -39,8 +40,8 @@ describe("liberação após pagamento aprovado", () => {
     expect(r.status).not.toBe("approved");
   });
 
-  it("rejeita valor incorreto (R$ 0,01 e R$ 79,90)", async () => {
-    for (const amountCents of [1, 7990, 798, null]) {
+  it("rejeita valor incorreto (R$ 0,01, R$ 7,99 e R$ 100,00)", async () => {
+    for (const amountCents of [1, 799, 10000, 999, null]) {
       const store = new MemoryStore([makeRecord()]);
       const r = await applyProviderState(store, (await store.getById(ID))!, makeProvider({ amountCents }));
       expect(r.status).toBe("pending");

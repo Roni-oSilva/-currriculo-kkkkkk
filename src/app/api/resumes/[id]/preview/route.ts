@@ -3,6 +3,7 @@ import { renderPreviewPdf } from "@/lib/pdf/render";
 import { rasterizePdf } from "@/lib/pdf/rasterize";
 import { minimumDataIssues } from "@/lib/resume/schema";
 import { logEvent } from "@/lib/log";
+import { getSettings } from "@/lib/settings";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -27,7 +28,8 @@ export async function GET(_req: Request, { params }: Ctx) {
 
   try {
     const photo = resume.design.showPhoto ? await loadPhoto(ctx.user.id, resume.data.personal.photoPath) : null;
-    const pdf = await renderPreviewPdf({ data: resume.data, design: resume.design, photo });
+    const { priceCents } = await getSettings();
+    const pdf = await renderPreviewPdf({ data: resume.data, design: resume.design, photo, priceCents });
     const { pages, pageCount } = await rasterizePdf(pdf, 1.5);
     return json({ pages, pageCount, version: resume.version });
   } catch (e) {

@@ -1,7 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { configStatus } from "@/lib/env";
 
-export const DEFAULT_PRICE_CENTS = 799;
+export const DEFAULT_PRICE_CENTS = 1000;
 
 export interface AppSettings {
   priceCents: number;

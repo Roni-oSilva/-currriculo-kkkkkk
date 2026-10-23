@@ -33,4 +33,4 @@
 - [ ] Rate limit global (Upstash) se houver tráfego alto.
 - [ ] Backups do Supabase habilitados; alerta de erros (`event_logs`, Vercel logs).
 - [ ] Rodar `npm test`, `npm run typecheck`, `npm run lint`, `npm run build` no CI.
-- [ ] Fazer 1 compra real de R$ 7,99 e conferir recebimento, download e (opcional) reembolso.
+- [ ] Fazer 1 compra real de R$ 10,00 e conferir recebimento, download e (opcional) reembolso.

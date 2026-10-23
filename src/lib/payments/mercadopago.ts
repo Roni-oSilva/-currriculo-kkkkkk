@@ -15,7 +15,7 @@ export function mapMercadoPagoStatus(status: string, detail?: string): PaymentSt
   }
 }
 
-/** R$ 7,99 (número do provedor) → 799. Usa arredondamento para evitar erro de ponto flutuante. */
+/** R$ 10,00 (número do provedor) → 1000. Usa arredondamento para evitar erro de ponto flutuante. */
 export function toCents(amount: unknown): number | null {
   const n = typeof amount === "string" ? Number(amount) : (amount as number);
   return typeof n === "number" && Number.isFinite(n) ? Math.round(n * 100) : null;

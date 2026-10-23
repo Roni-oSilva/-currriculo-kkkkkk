@@ -5,7 +5,7 @@ import { rasterizePdf, countPages } from "@/lib/pdf/rasterize";
 import { sampleResume } from "@/lib/resume/sample";
 import { TEMPLATE_IDS, resumePayloadSchema } from "@/lib/resume/schema";
 import { extractText } from "./helpers/pdf";
-import { PREVIEW_WATERMARK } from "@/lib/pdf/document";
+import { previewWatermark } from "@/lib/pdf/document";
 import { resumeFileName } from "@/lib/resume/format";
 
 describe("geração de PDF", () => {
@@ -24,8 +24,9 @@ describe("geração de PDF", () => {
   it("prévia contém a marca d'água, e as imagens entregues são PNG", async () => {
     const s = sampleResume("modern");
     const pdf = await renderPreviewPdf({ data: s.data, design: s.design });
-    expect(await extractText(pdf)).toContain("DESBLOQUEIE POR R$ 7,99");
-    expect(PREVIEW_WATERMARK).toContain("R$ 7,99");
+    expect(await extractText(pdf)).toContain("DESBLOQUEIE POR R$ 10,00");
+    expect(previewWatermark(1000)).toContain("R$ 10,00");
+    expect(previewWatermark(1550)).toContain("R$ 15,50");
     const r = await rasterizePdf(pdf);
     const png = Buffer.from(r.pages[0].split(",")[1], "base64");
     const meta = await sharp(png).metadata();

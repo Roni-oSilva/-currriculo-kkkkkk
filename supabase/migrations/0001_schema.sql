@@ -1,6 +1,6 @@
 -- =====================================================================
 -- Currículo IA — esquema principal
--- Todos os valores monetários são inteiros em centavos (799 = R$ 7,99).
+-- Todos os valores monetários são inteiros em centavos (1000 = R$ 10,00).
 -- Nenhum dado de cartão é armazenado: o processamento ocorre no provedor.
 -- =====================================================================
 
@@ -62,7 +62,7 @@ create table public.app_settings (
   updated_by uuid references public.profiles(id) on delete set null
 );
 insert into public.app_settings (key, value) values
-  ('price_cents', '799'::jsonb),
+  ('price_cents', '1000'::jsonb),
   -- true: alterar o conteúdo após a compra exige nova compra (padrão).
   ('repurchase_on_edit', 'true'::jsonb);
 
