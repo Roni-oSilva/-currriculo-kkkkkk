@@ -23,7 +23,7 @@ test("landing: chamada principal, preço, FAQ e rodapé legal", async ({ page })
 
 test("landing: seção de profissões no lugar da vitrine de modelos", async ({ page }) => {
   await page.goto("/");
-  await expect(page.locator("#profissoes")).toContainText("Administrativo e escritório");
+  await expect(page.locator("#profissoes")).toContainText("indicamos o modelo de currículo mais adequado");
   await expect(page.locator("#modelos")).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Profissões" }).first()).toBeVisible();
 });

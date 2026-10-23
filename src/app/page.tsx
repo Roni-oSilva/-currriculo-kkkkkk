@@ -1,7 +1,6 @@
 import { SiteFooter, SiteHeader } from "@/components/SiteChrome";
 import { LinkButton, Marker } from "@/components/ui";
 import { CountUp, Marquee, Reveal, Sticker, Words } from "@/components/Motion";
-import { PROFESSIONS, PROFESSION_CATEGORIES } from "@/lib/resume/professions";
 import { formatBRL, getSettings } from "@/lib/settings";
 import { getSessionUser } from "@/lib/auth";
 import { env } from "@/lib/env";
@@ -124,22 +123,9 @@ export default async function Home() {
         <div className="hero-blue mx-auto max-w-6xl overflow-hidden rounded-[24px]"><Marquee items={HIGHLIGHTS} /></div>
 
         {/* PROFISSÕES */}
-        <Reveal as="section" id="profissoes" className="mx-auto max-w-6xl scroll-mt-20 rounded-[32px] bg-paper p-6 sm:p-10">
-          <h2 className="text-3xl font-extrabold">O currículo ideal para a sua <Marker>profissão</Marker></h2>
-          <p className="mt-2 max-w-3xl text-muted">Ao criar o seu currículo, você informa a profissão e indicamos o modelo mais adequado à área, com as competências e palavras-chave mais comuns. São {PROFESSIONS.length} profissões em {PROFESSION_CATEGORIES.length} áreas, e o modelo pode ser trocado a qualquer momento.</p>
-          <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {PROFESSION_CATEGORIES.map((c, i) => {
-              const items = PROFESSIONS.filter((p) => p.category === c);
-              return (
-                <Reveal as="li" key={c} delay={(i % 3) * 80} className="lift rounded-2xl bg-white p-5">
-                  <span className="mb-2 block h-1.5 w-8 rounded-full bg-brand" aria-hidden />
-                  <h3 className="font-extrabold text-brand-dark">{c}</h3>
-                  <p className="mt-1 text-sm text-muted">{items.slice(0, 4).map((p) => p.name).join(", ")}{items.length > 4 ? ` e mais ${items.length - 4}` : ""}.</p>
-                </Reveal>
-              );
-            })}
-          </ul>
-          <div className="mt-6"><LinkButton href={cta} variant="accent">Escolher minha profissão</LinkButton></div>
+        <Reveal as="section" id="profissoes" className="mx-auto flex max-w-6xl scroll-mt-20 flex-wrap items-center justify-between gap-4 rounded-[32px] bg-paper p-6 sm:p-8">
+          <p className="max-w-2xl text-lg font-semibold text-ink">Informe a sua profissão e indicamos o modelo de currículo mais adequado à área.</p>
+          <LinkButton href={cta} variant="accent">Escolher minha profissão</LinkButton>
         </Reveal>
 
         {/* COMO FUNCIONA */}
