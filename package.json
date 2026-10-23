@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
+    "setup": "node scripts/setup.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test"
@@ -35,6 +36,7 @@
     "eslint": "^9.39.5",
     "eslint-config-next": "^15.5.28",
     "pdfjs-dist": "^5.7.284",
+    "pg": "^8.23.1",
     "postcss": "^8.5.31",
     "tailwindcss": "^4.3.3",
     "typescript": "5.9",

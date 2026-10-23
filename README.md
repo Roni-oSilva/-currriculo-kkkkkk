@@ -48,6 +48,7 @@ Se o Playwright não achar o Chromium: `PW_CHROMIUM_PATH=/caminho/do/chrome npm 
 ## Documentação
 
 - [docs/DEPLOY.md](docs/DEPLOY.md) — Supabase, Vercel, variáveis, primeiro administrador
+- [docs/PROMPT-AGENTE.md](docs/PROMPT-AGENTE.md) — prompt pronto para uma IA configurar tudo (`npm run setup`)
 - [docs/AI.md](docs/AI.md) — integração de IA e regras anti-invenção
 - [docs/PAYMENTS.md](docs/PAYMENTS.md) — Mercado Pago, webhook, política de compra
 - [docs/SECURITY.md](docs/SECURITY.md) — modelo de ameaças, proteção da prévia, limites conhecidos
