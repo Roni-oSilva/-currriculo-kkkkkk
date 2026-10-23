@@ -7,7 +7,7 @@
    - `supabase/migrations/0001_schema.sql`
    - `supabase/migrations/0002_rls.sql`
    - `supabase/migrations/0003_storage.sql` (cria os buckets **privados** `resume-photos` e `resume-files`)
-   - `supabase/migrations/0004_price_10.sql` (preço de R$ 10,00)
+   - `supabase/verificacao.sql` (aplica o preço de R$ 10,00 e confere RLS, buckets, gatilhos)
    
    (ou use a CLI: `supabase link && supabase db push`).
 3. **Project Settings → API**: copie `URL`, `anon key` e `service_role key`.
