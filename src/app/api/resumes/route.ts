@@ -1,6 +1,7 @@
 import { authenticate, isResponse, json, jsonError, limited } from "@/lib/api";
 import { emptyResume, TEMPLATE_IDS, type TemplateId } from "@/lib/resume/schema";
 import { getTemplate } from "@/lib/resume/templates";
+import { getProfession } from "@/lib/resume/professions";
 
 export async function POST(req: Request) {
   const ctx = await authenticate();
@@ -9,7 +10,9 @@ export async function POST(req: Request) {
   if (rl) return rl;
 
   const body = await req.json().catch(() => ({}));
-  const template = (TEMPLATE_IDS as readonly string[]).includes(body?.template) ? (body.template as TemplateId) : "classic";
+  // A profissão (validada contra a lista do servidor) define o modelo recomendado; o usuário pode escolher outro.
+  const profession = getProfession(typeof body?.profession === "string" ? body.profession : undefined);
+  const template: TemplateId = (TEMPLATE_IDS as readonly string[]).includes(body?.template) ? (body.template as TemplateId) : (profession?.template ?? "classic");
   const t = getTemplate(template);
   const base = emptyResume();
   const design = { ...base.design, template, accent: t.defaultAccent, sectionOrder: t.defaultOrder, showPhoto: t.supportsPhoto };
@@ -24,7 +27,11 @@ export async function POST(req: Request) {
       title: "Meu currículo",
       template,
       design,
-      data: { ...base.data, personal: { ...base.data.personal, email: ctx.user.email ?? "" } },
+      data: {
+        ...base.data,
+        personal: { ...base.data.personal, email: ctx.user.email ?? "" },
+        objective: { ...base.data.objective, targetRole: profession?.name ?? "", area: profession && profession.category !== "Primeiro emprego e estágio" ? profession.category : "" },
+      },
     })
     .select("id")
     .single();

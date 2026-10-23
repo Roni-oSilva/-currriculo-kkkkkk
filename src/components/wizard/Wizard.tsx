@@ -10,6 +10,7 @@ import { useAutosave, type SaveStatus } from "./useAutosave";
 import { TemplateStep } from "./TemplateStep";
 import { AiPanel } from "./AiPanel";
 import { AtsCard } from "./AtsCard";
+import { findProfessionByRole } from "@/lib/resume/professions";
 
 const STEPS = ["Dados pessoais", "Objetivo", "Experiência", "Formação", "Cursos", "Habilidades", "Adicionais", "Modelo", "Revisão"] as const;
 
@@ -55,6 +56,7 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
   const extras = (patch: Partial<ResumeData["extras"]>) => setData((d) => ({ ...d, extras: { ...d.extras, ...patch } }));
 
   const issues = useMemo(() => minimumDataIssues(data), [data]);
+  const profession = useMemo(() => findProfessionByRole(data.objective.targetRole), [data.objective.targetRole]);
   const [goingToPreview, setGoing] = useState(false);
 
   async function goPreview() {
@@ -152,6 +154,17 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
       case 5: return (
         <div className="space-y-4">
           <Notice tone="info">Liste habilidades como texto, sem barras de nível (ex.: “Excel: 80%”) — elas confundem os sistemas ATS.</Notice>
+          {profession ? (
+            <div className="rounded-2xl bg-chip/50 p-4">
+              <h3 className="font-extrabold">Comuns na área de {profession.name}</h3>
+              <p className="mb-2 text-sm text-muted">Toque para adicionar apenas o que você realmente domina.</p>
+              <ul className="flex flex-wrap gap-2">
+                {profession.keywords.filter((k) => ![...data.skills.technical, ...data.skills.tools, ...data.skills.soft, ...data.skills.domain].includes(k)).map((k) => (
+                  <li key={k}><button type="button" onClick={() => skills({ technical: [...data.skills.technical, k] })} className="min-h-10 rounded-full bg-white px-3 text-sm font-bold text-navy ring-1 ring-brand hover:bg-white/70">+ {k}</button></li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
           <TagInput label="Habilidades técnicas" values={data.skills.technical} onChange={(v) => skills({ technical: v })} />
           <TagInput label="Ferramentas e tecnologias" values={data.skills.tools} onChange={(v) => skills({ tools: v })} />
           <TagInput label="Competências interpessoais" values={data.skills.soft} onChange={(v) => skills({ soft: v })} />
@@ -189,7 +202,7 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
       );
       case 7: return (
         <TemplateStep design={design} onDesign={(d) => setPayload((p) => ({ ...p, design: d }))} resumeId={resumeId}
-          hasPhoto={Boolean(data.personal.photoPath)} photoUrl={photoUrl} enabledTemplates={enabledTemplates}
+          hasPhoto={Boolean(data.personal.photoPath)} photoUrl={photoUrl} enabledTemplates={enabledTemplates} recommended={profession ? { name: profession.name, template: profession.template } : undefined}
           onPhoto={(path, url) => { personal({ photoPath: path }); setPhotoUrl(url); }} />
       );
       default: return (

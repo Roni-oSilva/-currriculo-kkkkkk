@@ -21,13 +21,18 @@ test("landing: chamada principal, preço, FAQ e rodapé legal", async ({ page })
   await expect(page.locator("body")).not.toContainText(/depoimento|clientes satisfeitos/i);
 });
 
-test("landing: exemplos reais dos 5 modelos carregam como imagem", async ({ page }) => {
+test("landing: seção de profissões no lugar da vitrine de modelos", async ({ page }) => {
   await page.goto("/");
-  const imgs = page.locator("#modelos img");
-  await expect(imgs).toHaveCount(5);
-  for (const img of await imgs.all()) {
-    await img.scrollIntoViewIfNeeded();
-    await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 100), { timeout: 30_000 }).toBe(true);
+  await expect(page.locator("#profissoes")).toContainText("Administrativo e escritório");
+  await expect(page.locator("#modelos")).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Profissões" }).first()).toBeVisible();
+});
+
+test("imagens de exemplo dos modelos são servidas como arquivos estáticos", async ({ request }) => {
+  for (const id of ["classic", "modern", "minimal", "first-job", "creative"]) {
+    const r = await request.get(`/examples/${id}.png`);
+    expect(r.status()).toBe(200);
+    expect(r.headers()["content-type"]).toContain("image/png");
   }
 });
 
@@ -40,7 +45,7 @@ test("botões e campos têm área de toque adequada (≥ 44px) nas telas de logi
 });
 
 test("rotas privadas não abrem sem sessão", async ({ page }) => {
-  for (const p of ["/dashboard", "/admin", "/account", "/resume/00000000-0000-4000-8000-000000000000/edit"]) {
+  for (const p of ["/dashboard", "/admin", "/account", "/resume/new", "/resume/00000000-0000-4000-8000-000000000000/edit"]) {
     await page.goto(p);
     await expect(page).toHaveURL(/configuracao-pendente|\/login/);
   }

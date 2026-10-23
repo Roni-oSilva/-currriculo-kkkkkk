@@ -1,7 +1,7 @@
 import { SiteFooter, SiteHeader } from "@/components/SiteChrome";
 import { LinkButton, Marker } from "@/components/ui";
 import { CountUp, Marquee, Reveal, Sticker, Words } from "@/components/Motion";
-import { TEMPLATE_LIST } from "@/lib/resume/templates";
+import { PROFESSIONS, PROFESSION_CATEGORIES } from "@/lib/resume/professions";
 import { formatBRL, getSettings } from "@/lib/settings";
 import { getSessionUser } from "@/lib/auth";
 import { env } from "@/lib/env";
@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 const d = (ms: number) => ({ "--d": `${ms}ms` }) as React.CSSProperties;
 
-const HIGHLIGHTS = ["Prévia gratuita", "Cinco modelos profissionais", "Avaliação de 0 a 10", "Leitura compatível com ATS", "Pagamento único via Pix", "Dados protegidos"];
+const HIGHLIGHTS = ["Prévia gratuita", "Modelo ideal para cada profissão", "Avaliação de 0 a 10", "Leitura compatível com ATS", "Pagamento único via Pix", "Dados protegidos"];
 
 const STEPS = [
   { n: "01", t: "Informe seus dados", d: "Preencha dados pessoais, experiências, formação, cursos e habilidades. Apenas nome e um contato são obrigatórios, e tudo é salvo automaticamente." },
@@ -22,7 +22,7 @@ const BENEFITS = [
   ["Avaliação objetiva", "Uma nota de 0 a 10 indica o quanto o currículo se aproxima das práticas de RH e dos filtros de triagem, com recomendações específicas de melhoria."],
   ["Redação aprimorada, fatos preservados", "Ortografia, clareza e tom profissional são aperfeiçoados sem alterar empresas, datas, cursos ou competências que você informou."],
   ["Você mantém o controle", "Nenhuma sugestão é aplicada sem a sua aprovação. É possível editar e regenerar a prévia quantas vezes for necessário."],
-  ["Modelos para cada perfil", "Do formato formal ao criativo com foto, escolha o layout que melhor representa a sua trajetória e a vaga pretendida."],
+  ["Modelo indicado para a sua área", "Informe a profissão e receba a recomendação do formato mais adequado, do clássico ao criativo com foto, com sugestões de competências."],
   ["Uso confortável no celular", "Formulários simples, botões amplos e salvamento contínuo permitem concluir o currículo de qualquer dispositivo."],
   ["Privacidade e proteção de dados", "Fotos e arquivos ficam em armazenamento privado, em conformidade com a LGPD. Você pode excluir sua conta e seus dados a qualquer momento."],
 ];
@@ -80,7 +80,7 @@ const FAQ = [
 export default async function Home() {
   const [{ priceCents }, user] = await Promise.all([getSettings(), getSessionUser()]);
   const price = formatBRL(priceCents);
-  const cta = user ? "/dashboard" : "/cadastro";
+  const cta = user ? "/resume/new" : "/cadastro";
   return (
     <>
       <SiteHeader signedIn={Boolean(user)} />
@@ -96,11 +96,11 @@ export default async function Home() {
               <span className="marker"><span className="marker-bg" aria-hidden /><Words text="bom currículo" start={620} /></span>
             </h1>
             <p className="anim-up max-w-xl text-lg text-muted" style={d(500)}>
-              Organize suas informações, escolha entre cinco modelos elaborados e receba uma avaliação de <strong>0 a 10</strong> sobre a aderência do documento às práticas de RH e aos sistemas de triagem.
+              Organize suas informações, escolha a sua profissão, utilize o modelo indicado para a área e receba uma avaliação de <strong>0 a 10</strong> sobre a aderência do documento às práticas de RH e aos sistemas de triagem.
             </p>
             <div className="anim-up flex flex-wrap gap-3" style={d(650)}>
               <LinkButton href={cta} variant="accent" className="pulse-ring">Criar meu currículo</LinkButton>
-              <LinkButton href="#modelos" variant="outline">Conhecer os modelos</LinkButton>
+              <LinkButton href="#profissoes" variant="outline">Ver profissões</LinkButton>
             </div>
             <ul className="tick-list anim-up flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold text-muted" style={d(800)}>
               <li>Prévia gratuita</li><li>PDF por {price}</li><li>Pix, sem mensalidade</li><li>Conforme a LGPD</li>
@@ -123,24 +123,23 @@ export default async function Home() {
         {/* FAIXA */}
         <div className="hero-blue mx-auto max-w-6xl overflow-hidden rounded-[24px]"><Marquee items={HIGHLIGHTS} /></div>
 
-        {/* MODELOS */}
-        <Reveal as="section" id="modelos" className="mx-auto max-w-6xl scroll-mt-20 rounded-[32px] bg-paper p-6 sm:p-10">
-          <h2 className="text-3xl font-extrabold">Modelos <Marker>profissionais</Marker></h2>
-          <p className="mt-2 max-w-2xl text-muted">Cinco layouts distintos, todos com texto selecionável. Escolha o formato conforme o seu perfil e o processo seletivo.</p>
-          <ul className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {TEMPLATE_LIST.map((t, i) => (
-              <Reveal as="li" key={t.id} delay={i * 90} className="tilt overflow-hidden rounded-2xl bg-white shadow-sm">
-                <div className="overflow-hidden border-b">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={`/examples/${t.id}.png`} alt={`Exemplo do modelo ${t.name}`} loading="lazy" width={773} height={1093} className="zoom fade-img aspect-[1/1.414] w-full object-cover object-top" />
-                </div>
-                <div className="space-y-1 p-4">
-                  <h3 className="flex flex-wrap items-center gap-2 font-extrabold">{t.name}{t.recommendedByHr ? <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-900">Preferido por RH</span> : null}{t.supportsPhoto && t.id !== "classic" ? <span className="rounded-full bg-chip px-2 py-0.5 text-xs font-bold text-navy">Com foto</span> : null}</h3>
-                  <p className="text-sm text-muted">{t.description}</p>
-                </div>
-              </Reveal>
-            ))}
+        {/* PROFISSÕES */}
+        <Reveal as="section" id="profissoes" className="mx-auto max-w-6xl scroll-mt-20 rounded-[32px] bg-paper p-6 sm:p-10">
+          <h2 className="text-3xl font-extrabold">O currículo ideal para a sua <Marker>profissão</Marker></h2>
+          <p className="mt-2 max-w-3xl text-muted">Ao criar o seu currículo, você informa a profissão e indicamos o modelo mais adequado à área, com as competências e palavras-chave mais comuns. São {PROFESSIONS.length} profissões em {PROFESSION_CATEGORIES.length} áreas, e o modelo pode ser trocado a qualquer momento.</p>
+          <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {PROFESSION_CATEGORIES.map((c, i) => {
+              const items = PROFESSIONS.filter((p) => p.category === c);
+              return (
+                <Reveal as="li" key={c} delay={(i % 3) * 80} className="lift rounded-2xl bg-white p-5">
+                  <span className="mb-2 block h-1.5 w-8 rounded-full bg-brand" aria-hidden />
+                  <h3 className="font-extrabold text-brand-dark">{c}</h3>
+                  <p className="mt-1 text-sm text-muted">{items.slice(0, 4).map((p) => p.name).join(", ")}{items.length > 4 ? ` e mais ${items.length - 4}` : ""}.</p>
+                </Reveal>
+              );
+            })}
           </ul>
+          <div className="mt-6"><LinkButton href={cta} variant="accent">Escolher minha profissão</LinkButton></div>
         </Reveal>
 
         {/* COMO FUNCIONA */}

@@ -2,27 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Notice } from "./ui";
+import { Button, LinkButton } from "./ui";
 
-export function NewResumeButton({ label = "+ Criar novo currículo", template }: { label?: string; template?: string }) {
-  const router = useRouter();
-  const [busy, setBusy] = useState(false);
-  const [err, setErr] = useState<string | null>(null);
-  async function create() {
-    setBusy(true); setErr(null);
-    try {
-      const res = await fetch("/api/resumes", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ template }) });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error ?? "Erro ao criar.");
-      router.push(`/resume/${json.id}/edit`);
-    } catch (e) { setErr((e as Error).message); setBusy(false); }
-  }
-  return (
-    <div className="space-y-2">
-      <Button onClick={create} disabled={busy}>{busy ? "Criando…" : label}</Button>
-      {err ? <Notice tone="error">{err}</Notice> : null}
-    </div>
-  );
+export function NewResumeButton({ label = "+ Criar novo currículo" }: { label?: string }) {
+  return <LinkButton href="/resume/new">{label}</LinkButton>;
 }
 
 export function DeleteResumeButton({ id, title }: { id: string; title: string }) {

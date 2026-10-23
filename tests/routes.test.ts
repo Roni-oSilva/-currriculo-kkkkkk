@@ -198,3 +198,26 @@ describe("POST /api/ai/improve e /api/payments sem configuração", () => {
     expect(db.table("payments")).toHaveLength(0);
   });
 });
+
+describe("POST /api/resumes com profissão", () => {
+  const post = (body: unknown) => req("/api/resumes", { method: "POST", body: JSON.stringify(body) });
+  it("usa o modelo recomendado da profissão e preenche cargo e área", async () => {
+    const { POST } = await import("@/app/api/resumes/route");
+    const res = await POST(post({ profession: "designer-grafico" }));
+    expect(res.status).toBe(201);
+    const row = db.table("resumes")[0] as { template: string; user_id: string; data: { objective: { targetRole: string; area: string } } };
+    expect(row.template).toBe("creative");
+    expect(row.user_id).toBe(A);
+    expect(row.data.objective.targetRole).toBe("Designer gráfico");
+    expect(row.data.objective.area).toBe("Marketing, comunicação e criação");
+  });
+  it("permite trocar o modelo; ignora profissão e modelo inválidos", async () => {
+    const { POST } = await import("@/app/api/resumes/route");
+    await POST(post({ profession: "designer-grafico", template: "classic" }));
+    await POST(post({ profession: "inventada", template: "hacker" }));
+    const rows = db.table("resumes") as { template: string; data: { objective: { targetRole: string } } }[];
+    expect(rows[0].template).toBe("classic");
+    expect(rows[1].template).toBe("classic");
+    expect(rows[1].data.objective.targetRole).toBe("");
+  });
+});

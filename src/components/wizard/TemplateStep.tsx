@@ -6,7 +6,8 @@ import { ACCENT_COLORS, SECTION_LABELS, type ResumeDesign, type SectionKey, type
 import { TEMPLATE_LIST, getTemplate } from "@/lib/resume/templates";
 import { CheckField } from "./fields";
 
-export function TemplateStep({ design, onDesign, resumeId, hasPhoto, photoUrl, onPhoto, enabledTemplates }: {
+export function TemplateStep({ design, onDesign, resumeId, hasPhoto, photoUrl, onPhoto, enabledTemplates, recommended }: {
+  recommended?: { name: string; template: string };
   design: ResumeDesign; onDesign: (d: ResumeDesign) => void; resumeId: string; hasPhoto: boolean; photoUrl: string | null;
   onPhoto: (path: string, url: string | null) => void; enabledTemplates: string[];
 }) {
@@ -59,7 +60,7 @@ export function TemplateStep({ design, onDesign, resumeId, hasPhoto, photoUrl, o
                   className={`h-full w-full rounded-2xl p-4 text-left ring-2 transition ${selected ? "bg-chip/60 ring-brand" : "bg-white ring-zinc-200 hover:ring-brand"}`}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={`/examples/${x.id}.png`} alt={`Pré-visualização do modelo ${x.name}`} loading="lazy" className="mb-3 aspect-[1/1.2] w-full rounded-lg border object-cover object-top" />
-                  <span className="flex flex-wrap items-center gap-2 font-extrabold">{x.name}{x.recommendedByHr ? <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-900">Preferido por RH</span> : null}</span>
+                  <span className="flex flex-wrap items-center gap-2 font-extrabold">{x.name}{recommended?.template === x.id ? <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-900">Recomendado para {recommended.name}</span> : null}{x.recommendedByHr ? <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-900">Preferido por RH</span> : null}</span>
                   <span className="mt-1 block text-sm text-muted">{x.description}</span>
                 </button>
               </li>

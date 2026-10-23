@@ -11,7 +11,7 @@ export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
         <Logo light />
         <nav aria-label="Principal" className="hidden items-center gap-6 text-sm font-semibold text-white/85 md:flex [&_a]:link-u">
-          <Link href="/#modelos" className="hover:text-white">Modelos</Link>
+          <Link href="/#profissoes" className="hover:text-white">Profissões</Link>
           <Link href="/#como-funciona" className="hover:text-white">Como funciona</Link>
           <Link href="/#dicas" className="hover:text-white">Dicas de RH</Link>
           <Link href="/#preco" className="hover:text-white">Preço</Link>
