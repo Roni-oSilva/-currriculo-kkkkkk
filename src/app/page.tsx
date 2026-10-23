@@ -122,7 +122,7 @@ export default async function Home() {
             {TEMPLATE_LIST.map((t, i) => (
               <Reveal as="li" key={t.id} delay={i * 80} className="lift overflow-hidden rounded-2xl bg-white shadow-sm">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`/api/examples/${t.id}`} alt={`Exemplo ilustrativo do modelo ${t.name}`} loading="lazy" width={600} height={850} className="aspect-[1/1.414] w-full border-b object-cover object-top" />
+                <img src={`/examples/${t.id}.png`} alt={`Exemplo ilustrativo do modelo ${t.name}`} loading="lazy" width={600} height={850} className="aspect-[1/1.414] w-full border-b object-cover object-top" />
                 <div className="space-y-1 p-4">
                   <h3 className="flex flex-wrap items-center gap-2 font-extrabold">{t.name}{t.recommendedByHr ? <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-900">Preferido por RH</span> : null}</h3>
                   <p className="text-sm text-muted">{t.description}</p>

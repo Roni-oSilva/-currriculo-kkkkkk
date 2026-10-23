@@ -7,5 +7,5 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   // Webhooks e exemplos públicos não precisam de sessão.
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|api/webhooks|api/examples|.*\\.(?:svg|png|jpg|jpeg|webp|ico)$).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|api/webhooks|.*\\.(?:svg|png|jpg|jpeg|webp|ico)$).*)"],
 };
