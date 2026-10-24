@@ -1,3 +1,4 @@
+import { formatDateTime, formatDate } from "@/lib/datetime";
 import Link from "next/link";
 import { SiteFooter, SiteHeader } from "@/components/SiteChrome";
 import { Card, LinkButton, Notice } from "@/components/ui";
@@ -62,7 +63,7 @@ export default async function Dashboard() {
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
                   <h2 className="text-xl font-extrabold">{r.title}</h2>
-                  <p className="text-sm text-muted">{getTemplate(r.template).name} • versão {r.version} • atualizado em {new Date(r.updated_at).toLocaleString("pt-BR")}</p>
+                  <p className="text-sm text-muted">{getTemplate(r.template).name} • versão {r.version} • atualizado em {formatDateTime(r.updated_at)}</p>
                 </div>
                 <span className="rounded-full bg-chip px-3 py-1 text-sm font-bold text-navy">{r.status === "ready" ? "Pronto para prévia" : "Rascunho"}</span>
               </div>
@@ -77,7 +78,7 @@ export default async function Dashboard() {
                   <ul className="mt-2 space-y-2 text-sm">
                     {pays.map((p) => (
                       <li key={p.id} className="flex flex-wrap items-center justify-between gap-2">
-                        <span>Versão {p.resume_version} • {formatBRL(p.amount_cents)} • <strong>{PAY_LABEL[p.status]}</strong> • {new Date(p.created_at).toLocaleDateString("pt-BR")}</span>
+                        <span>Versão {p.resume_version} • {formatBRL(p.amount_cents)} • <strong>{PAY_LABEL[p.status]}</strong> • {formatDate(p.created_at)}</span>
                         {p.status === "approved" ? <DownloadButton resumeId={r.id} version={p.resume_version} label={`Baixar v${p.resume_version}`} variant="light" /> : null}
                       </li>
                     ))}

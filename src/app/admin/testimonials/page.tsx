@@ -1,3 +1,4 @@
+import { formatDateTime } from "@/lib/datetime";
 import { SiteHeader } from "@/components/SiteChrome";
 import { Card } from "@/components/ui";
 import { AdminNav } from "@/components/AdminNav";
@@ -32,7 +33,7 @@ export default async function AdminTestimonials() {
               <div className="min-w-0 flex-1">
                 <p className="font-extrabold">{r.display_name} <span className={`ml-2 rounded-full px-2 py-0.5 text-xs ${r.status === "approved" ? "bg-emerald-100 text-emerald-900" : r.status === "rejected" ? "bg-red-100 text-red-900" : "bg-amber-100 text-amber-900"}`}>{LABEL[r.status]}</span></p>
                 <p className="mt-1 whitespace-pre-wrap text-sm">{r.quote}</p>
-                <p className="mt-1 text-xs text-muted">Recebido em {new Date(r.created_at).toLocaleString("pt-BR")}</p>
+                <p className="mt-1 text-xs text-muted">Recebido em {formatDateTime(r.created_at)}</p>
               </div>
             </div>
             <TestimonialModeration id={r.id} />

@@ -1,3 +1,4 @@
+import { brazilDayStart, formatDateTime, toDateInput } from "@/lib/datetime";
 import { SiteHeader } from "@/components/SiteChrome";
 import { Card } from "@/components/ui";
 import { AdminNav } from "@/components/AdminNav";
@@ -13,9 +14,11 @@ export const metadata = { title: "Admin" };
 export default async function Admin({ searchParams }: { searchParams: Promise<{ from?: string; to?: string; status?: string }> }) {
   await requireAdmin();
   const sp = await searchParams;
-  const to = sp.to && !isNaN(Date.parse(sp.to)) ? new Date(sp.to) : new Date();
-  const from = sp.from && !isNaN(Date.parse(sp.from)) ? new Date(sp.from) : new Date(Date.now() - 30 * 86_400_000);
-  const toEnd = new Date(to.getTime() + 86_400_000);
+  // Filtros em dias de Brasília: de 00:00 do primeiro dia até o fim do último dia.
+  const from = (sp.from && brazilDayStart(sp.from)) || brazilDayStart(toDateInput(new Date(Date.now() - 30 * 86_400_000)))!;
+  const toDay = (sp.to && brazilDayStart(sp.to)) || brazilDayStart(toDateInput(new Date()))!;
+  const to = toDay;
+  const toEnd = new Date(toDay.getTime() + 86_400_000);
   const status = (PAYMENT_STATUSES as readonly string[]).includes(sp.status ?? "") ? sp.status! : "";
 
   const db = createAdminClient();
@@ -34,7 +37,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
     ["Pagamentos aprovados", String(m.payments_approved ?? 0)], ["Receita bruta", formatBRL(m.gross_cents ?? 0)],
     ["Reembolsos", formatBRL(m.refunded_cents ?? 0)], ["Conversão da criação à compra", `${conversion.toString().replace(".", ",")}%`],
   ];
-  const iso = (d: Date) => d.toISOString().slice(0, 10);
+  const iso = (d: Date) => toDateInput(d);
 
   return (
     <>
@@ -62,7 +65,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
             <tbody>
               {(txq.data ?? []).map((p) => (
                 <tr key={p.id} className="border-b border-zinc-200">
-                  <td className="py-2">{new Date(p.created_at).toLocaleString("pt-BR")}</td><td className="font-bold">{p.status}</td><td>{formatBRL(p.amount_cents)}</td><td>{p.resume_version}</td><td>{p.provider_payment_id ?? "—"}</td>
+                  <td className="py-2">{formatDateTime(p.created_at)}</td><td className="font-bold">{p.status}</td><td>{formatBRL(p.amount_cents)}</td><td>{p.resume_version}</td><td>{p.provider_payment_id ?? "—"}</td>
                   <td>{p.provider_payment_id ? <ReconcileButton id={p.id} /> : null}</td>
                 </tr>
               ))}

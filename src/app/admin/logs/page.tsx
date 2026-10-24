@@ -1,3 +1,4 @@
+import { formatDateTime } from "@/lib/datetime";
 import { SiteHeader } from "@/components/SiteChrome";
 import { Card } from "@/components/ui";
 import { AdminNav } from "@/components/AdminNav";
@@ -23,12 +24,12 @@ export default async function AdminLogs({ searchParams }: { searchParams: Promis
         </Card>
         <Card className="overflow-x-auto"><h2 className="mb-2 text-xl font-extrabold">Eventos (sem dados pessoais)</h2>
           <table className="w-full min-w-[640px] text-left text-sm"><tbody>
-            {(logs ?? []).map((l) => <tr key={l.id} className="border-b border-zinc-200 align-top"><td className="py-2 pr-2 whitespace-nowrap">{new Date(l.created_at).toLocaleString("pt-BR")}</td><td className={`pr-2 font-bold ${l.level === "error" ? "text-red-700" : l.level === "warn" ? "text-amber-700" : ""}`}>{l.level}</td><td className="pr-2 font-bold">{l.type}</td><td className="break-all text-xs text-muted">{l.message} {JSON.stringify(l.meta)}</td></tr>)}
+            {(logs ?? []).map((l) => <tr key={l.id} className="border-b border-zinc-200 align-top"><td className="py-2 pr-2 whitespace-nowrap">{formatDateTime(l.created_at)}</td><td className={`pr-2 font-bold ${l.level === "error" ? "text-red-700" : l.level === "warn" ? "text-amber-700" : ""}`}>{l.level}</td><td className="pr-2 font-bold">{l.type}</td><td className="break-all text-xs text-muted">{l.message} {JSON.stringify(l.meta)}</td></tr>)}
           </tbody></table>
         </Card>
         <Card className="overflow-x-auto"><h2 className="mb-2 text-xl font-extrabold">Auditoria administrativa</h2>
           <table className="w-full min-w-[640px] text-left text-sm"><tbody>
-            {(audit ?? []).map((a) => <tr key={a.id} className="border-b border-zinc-200 align-top"><td className="py-2 pr-2 whitespace-nowrap">{new Date(a.created_at).toLocaleString("pt-BR")}</td><td className="pr-2 font-bold">{a.action}</td><td className="pr-2">{a.target}</td><td className="break-all text-xs text-muted">{JSON.stringify(a.details)}</td></tr>)}
+            {(audit ?? []).map((a) => <tr key={a.id} className="border-b border-zinc-200 align-top"><td className="py-2 pr-2 whitespace-nowrap">{formatDateTime(a.created_at)}</td><td className="pr-2 font-bold">{a.action}</td><td className="pr-2">{a.target}</td><td className="break-all text-xs text-muted">{JSON.stringify(a.details)}</td></tr>)}
             {!audit?.length ? <tr><td className="py-3 text-muted">Sem registros.</td></tr> : null}
           </tbody></table>
         </Card>
