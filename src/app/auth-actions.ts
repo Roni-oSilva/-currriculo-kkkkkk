@@ -43,8 +43,15 @@ export async function registerAction(_: FormState, form: FormData): Promise<Form
     options: { data: { full_name: parsed.data.fullName }, emailRedirectTo: `${env.appUrl}/auth/callback?next=/dashboard` },
   });
   if (error) return { error: "Não foi possível criar a conta. Verifique os dados ou tente entrar." };
-  if (data.session) redirect("/dashboard");
-  return { ok: "Conta criada! Enviamos um e-mail de confirmação. Confirme para entrar." };
+  // Sem confirmação de e-mail no Supabase, o cadastro já devolve a sessão: entra direto e escolhe a profissão.
+  if (data.session) redirect("/resume/new");
+  // Sem sessão: ou o e-mail já existia (o Supabase não revela isso) ou a confirmação ainda está ligada.
+  const login = await supabase.auth.signInWithPassword({ email: parsed.data.email, password: parsed.data.password });
+  if (!login.error) redirect("/resume/new");
+  if (/confirm/i.test(login.error.message)) {
+    return { error: "A confirmação de e-mail ainda está ativada no servidor. Desative “Confirm email” no Supabase (Authentication > Providers > Email) para entrar direto." };
+  }
+  return { error: "Não foi possível criar a conta. Se você já tem cadastro com esse e-mail, use “Entrar”." };
 }
 
 export async function loginAction(_: FormState, form: FormData): Promise<FormState> {

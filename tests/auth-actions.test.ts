@@ -29,14 +29,38 @@ beforeEach(async () => {
 });
 
 describe("ações de autenticação", () => {
-  it("cadastro: valida, envia nome nos metadados e pede confirmação por e-mail", async () => {
+  it("cadastro: valida os campos antes de falar com o servidor", async () => {
     const { registerAction } = await import("@/app/auth-actions");
     const bad = await registerAction({}, form({ fullName: "Ana", email: "x", password: "abc12345" }));
     expect(bad.fieldErrors?.email).toBeTruthy();
     expect(calls).toHaveLength(0);
-    const ok = await registerAction({}, form({ fullName: "Ana Souza", email: "ana@x.com", password: "abc12345" }));
-    expect(ok.ok).toMatch(/confirmação/);
+  });
+  it("cadastro sem confirmação de e-mail: entra direto e vai escolher a profissão", async () => {
+    const { registerAction } = await import("@/app/auth-actions");
+    signUpResult = { data: { session: { access_token: "t" } }, error: null };
+    await expect(registerAction({}, form({ fullName: "Ana Souza", email: "ana@x.com", password: "abc12345" }))).rejects.toThrow("NEXT_REDIRECT");
+    expect(redirected.at(-1)).toBe("/resume/new");
     expect(calls[0].fn).toBe("signUp");
+    expect((calls[0].args[0] as { options: { data: { full_name: string } } }).options.data.full_name).toBe("Ana Souza");
+  });
+  it("cadastro sem sessão imediata: tenta entrar com a mesma senha; se der certo, entra", async () => {
+    const { registerAction } = await import("@/app/auth-actions");
+    await expect(registerAction({}, form({ fullName: "Ana Souza", email: "ana@x.com", password: "abc12345" }))).rejects.toThrow("NEXT_REDIRECT");
+    expect(calls.map((c) => c.fn)).toEqual(["signUp", "signIn"]);
+    expect(redirected.at(-1)).toBe("/resume/new");
+  });
+  it("e-mail já cadastrado com outra senha: não entra e não revela se a conta existe", async () => {
+    const { registerAction } = await import("@/app/auth-actions");
+    signInError = { message: "Invalid login credentials" };
+    const r = await registerAction({}, form({ fullName: "Ana Souza", email: "ana@x.com", password: "abc12345" }));
+    expect(r.error).toMatch(/Entrar/);
+    expect(redirected).toHaveLength(0);
+  });
+  it("se a confirmação de e-mail ainda estiver ligada no Supabase, explica como desligar", async () => {
+    const { registerAction } = await import("@/app/auth-actions");
+    signInError = { message: "Email not confirmed" };
+    const r = await registerAction({}, form({ fullName: "Ana Souza", email: "ana@x.com", password: "abc12345" }));
+    expect(r.error).toMatch(/Confirm email/);
   });
   it("login: erro genérico para credenciais inválidas e redirecionamento seguro no sucesso", async () => {
     const { loginAction } = await import("@/app/auth-actions");

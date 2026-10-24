@@ -15,7 +15,7 @@
    A `service_role` **nunca** vai para o navegador nem para variáveis `NEXT_PUBLIC_*`.
 4. **Authentication → URL Configuration**: `Site URL` = URL de produção; em *Redirect URLs* adicione
    `https://SEU-DOMINIO/auth/callback` (e `http://localhost:3000/auth/callback` para desenvolvimento).
-5. **Authentication → Providers → Email**: mantenha *Confirm email* ligado. Configure um SMTP próprio em produção
+5. **Authentication → Providers → Email**: deixe *Confirm email* **desligado** para a pessoa entrar direto após o cadastro. (Efeito colateral: qualquer um pode criar conta com um e-mail que não é seu; a recuperação de senha continua usando e-mail.) Configure um SMTP próprio em produção
    (o SMTP padrão do Supabase tem limite baixo).
 6. **Authentication → Policies**: senha mínima de 8 caracteres (o app também valida).
 7. Primeiro administrador — após criar sua conta pelo site, no SQL Editor:
