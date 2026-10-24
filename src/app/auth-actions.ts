@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { configStatus, env } from "@/lib/env";
 import { clientIp, rateLimit } from "@/lib/security/ratelimit";
+import { logEvent } from "@/lib/log";
+import { signupErrorMessage } from "@/lib/auth-errors";
 import { forgotSchema, loginSchema, registerSchema, resetSchema } from "@/lib/auth-schemas";
 
 export interface FormState {
@@ -42,7 +44,10 @@ export async function registerAction(_: FormState, form: FormData): Promise<Form
     password: parsed.data.password,
     options: { data: { full_name: parsed.data.fullName }, emailRedirectTo: `${env.appUrl}/auth/callback?next=/dashboard` },
   });
-  if (error) return { error: "Não foi possível criar a conta. Verifique os dados ou tente entrar." };
+  if (error) {
+    await logEvent("error", "signup_failed", "", { code: (error as { code?: string }).code ?? "", status: (error as { status?: number }).status ?? 0, reason: error.message.slice(0, 120) });
+    return { error: signupErrorMessage(error) };
+  }
   // Sem confirmação de e-mail no Supabase, o cadastro já devolve a sessão: entra direto e escolhe a profissão.
   if (data.session) redirect("/resume/new");
   // Sem sessão: ou o e-mail já existia (o Supabase não revela isso) ou a confirmação ainda está ligada.
