@@ -39,7 +39,7 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-3">
         <div className="space-y-3">
           <Logo light />
-          <p className="text-sm">Currículos profissionais, claros e alinhados às expectativas do RH.</p>
+          <p className="text-sm">Currículos claros e bem organizados, no formato que o RH gosta de ver.</p>
         </div>
         <nav aria-label="Rodapé" className="space-y-2 text-sm font-semibold">
           <Link className="block hover:text-white" href="/termos">Termos de uso</Link>

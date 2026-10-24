@@ -27,6 +27,11 @@ describe("IA: nunca inventar fatos", () => {
     expect(r.suggestions).toHaveLength(0);
     expect(r.rejected).toBe(2);
   });
+  it("ids internos (que podem conter dígitos) não contam como fatos do usuário", () => {
+    const withId = { ...s.data, experience: s.data.experience.map((e, i) => ({ ...e, id: `x150-${i}-2099-${e.id}` })) };
+    expect(corpusOf(withId)).not.toMatch(/150|2099/);
+    expect(checkNoNewFacts("Aumentei as vendas em 150%", corpusOf(withId)).ok).toBe(false);
+  });
   it("aceita nomes que já constam no currículo", () => {
     expect(checkNoNewFacts("Atuação na Empresa Exemplo Ltda. com Excel", corpusOf(s.data)).ok).toBe(true);
   });

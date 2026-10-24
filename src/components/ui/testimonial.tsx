@@ -39,7 +39,7 @@ export default function Testimonials({ items }: { items: Testimonial[] }) {
     <section id="depoimentos" className="mx-auto max-w-6xl scroll-mt-20 rounded-[32px] bg-paper p-6 sm:p-10" aria-labelledby="dep-title">
       <div className="mx-auto max-w-2xl text-center">
         <h2 id="dep-title" className="text-3xl font-extrabold">Quem já usou, <Marker>recomenda</Marker></h2>
-        <p className="mt-2 text-muted">Relatos de pessoas que montaram o currículo aqui.</p>
+        <p className="mt-2 text-muted">O que dizem as pessoas que montaram o currículo aqui.</p>
       </div>
       <div className="mt-8 grid gap-3 lg:grid-cols-3">
         {/* Em telas grandes: coluna 1 e 3 com um depoimento alto, coluna 2 com dois menores */}

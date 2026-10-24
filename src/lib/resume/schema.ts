@@ -153,6 +153,7 @@ export const ACCENT_COLORS = [
   { id: "burgundy", label: "Bordô", hex: "#9f1239" },
   { id: "amber", label: "Âmbar", hex: "#b45309" },
   { id: "slate", label: "Grafite", hex: "#334155" },
+  { id: "black", label: "Preto", hex: "#111111" },
 ] as const;
 export const ACCENT_IDS = ACCENT_COLORS.map((c) => c.id) as [string, ...string[]];
 

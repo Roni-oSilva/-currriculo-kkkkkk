@@ -4,10 +4,10 @@ import { env } from "@/lib/env";
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.appUrl),
-  title: { default: "Currículo Certo — currículo profissional em minutos", template: "%s | Currículo Certo" },
-  description: "Crie um currículo profissional, veja a nota de aceitação (0 a 10) para o modelo escolhido e baixe em PDF por R$ 10,00.",
+  title: { default: "Currículo Certo — seu currículo pronto em minutos", template: "%s | Currículo Certo" },
+  description: "Monte seu currículo em poucos minutos, escolha o modelo ideal para a sua profissão e baixe o PDF por R$ 10,00. A prévia é grátis.",
 };
-export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#26262b" };
+export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#070a08" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

@@ -30,7 +30,7 @@ function allText(d: ResumeData): string {
   const walk = (v: unknown) => {
     if (typeof v === "string") parts.push(v);
     else if (Array.isArray(v)) v.forEach(walk);
-    else if (v && typeof v === "object") Object.values(v).forEach(walk);
+    else if (v && typeof v === "object") for (const [k, val] of Object.entries(v)) if (k !== "id") walk(val);
   };
   walk({ ...d, personal: { ...d.personal, photoPath: "" } });
   return parts.join("\n");

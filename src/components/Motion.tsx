@@ -45,9 +45,9 @@ export function CountUp({ to, decimals = 1, duration = 1400, className = "" }: {
 export function Sticker({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 80 80" aria-hidden className={`float ${className}`} style={{ "--r": "-8deg" } as React.CSSProperties}>
-      <circle cx="40" cy="40" r="34" fill="#fff" stroke="#1c1c21" strokeWidth="3" />
-      <circle cx="29" cy="34" r="4" fill="#1c1c21" /><circle cx="51" cy="34" r="4" fill="#1c1c21" />
-      <path d="M24 48 Q40 64 56 48" fill="none" stroke="#1c1c21" strokeWidth="4" strokeLinecap="round" />
+      <circle cx="40" cy="40" r="34" fill="#fff" stroke="#0b0f0d" strokeWidth="3" />
+      <circle cx="29" cy="34" r="4" fill="#0b0f0d" /><circle cx="51" cy="34" r="4" fill="#0b0f0d" />
+      <path d="M24 48 Q40 64 56 48" fill="none" stroke="#0b0f0d" strokeWidth="4" strokeLinecap="round" />
     </svg>
   );
 }

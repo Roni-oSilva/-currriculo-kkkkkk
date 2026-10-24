@@ -8,7 +8,10 @@ export function corpusOf(data: ResumeData, extra = ""): string {
   const walk = (v: unknown) => {
     if (typeof v === "string") parts.push(v);
     else if (Array.isArray(v)) v.forEach(walk);
-    else if (v && typeof v === "object") Object.values(v).forEach(walk);
+    else if (v && typeof v === "object") {
+      // Códigos internos (id) e caminhos de arquivo não são "fatos" do usuário e podem conter dígitos aleatórios.
+      for (const [k, val] of Object.entries(v)) if (k !== "id" && k !== "photoPath") walk(val);
+    }
   };
   walk({ ...data, personal: { ...data.personal, photoPath: "" } });
   return parts.join("\n");

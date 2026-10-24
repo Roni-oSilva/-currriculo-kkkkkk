@@ -6,7 +6,7 @@ const base =
 const variants = {
   primary: "btn-shine bg-brand text-white hover:bg-brand-dark",
   light: "bg-white text-brand-dark hover:bg-chip",
-  accent: "btn-shine bg-accent text-navy hover:bg-accent-dark shadow-[0_6px_0_-2px_rgba(12,22,51,.25)]",
+  accent: "btn-shine bg-accent text-ink hover:bg-accent-dark shadow-[0_6px_0_-2px_rgba(0,0,0,.35)]",
   outline: "border-2 border-brand text-brand hover:bg-brand hover:text-white",
   ghost: "text-ink hover:bg-black/5",
   danger: "bg-red-700 text-white hover:bg-red-800",

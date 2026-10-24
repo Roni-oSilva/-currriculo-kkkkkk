@@ -13,7 +13,7 @@ export default function Page() {
       <h2>4. Uso aceitável</h2>
       <p>É proibido inserir conteúdo ilegal, de terceiros sem autorização, ou tentar burlar a marca d’água, o pagamento ou os limites de uso.</p>
       <h2>5. Limitação de responsabilidade</h2>
-      <p>A nota de 0 a 10 é uma estimativa baseada em boas práticas; não garante aprovação em processos seletivos.</p>
+      <p>O site ajuda a montar o currículo, mas não garante contratação nem aprovação em processos seletivos.</p>
       <h2>6. Contato</h2>
       <p>Dúvidas: {env.contactEmail}.</p>
     </LegalPage>
