@@ -63,6 +63,7 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
   const [summaryVariant, setSummaryVariant] = useState(0);
   const [summaryMsg, setSummaryMsg] = useState<string | null>(null);
   const score = useMemo(() => scoreResume(data, design), [data, design]);
+  const nextTip = useMemo(() => [...score.items].sort((a, b) => b.max - b.points - (a.max - a.points))[0], [score]);
 
   function makeSummary(length: "short" | "detailed") {
     if (!data.objective.keywords.length && !data.skills.technical.length) {
@@ -276,10 +277,6 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
           <label className="sr-only" htmlFor="title">Título do currículo</label>
           <input id="title" value={payload.title} onChange={(e) => setPayload((p) => ({ ...p, title: e.target.value }))} maxLength={100}
             className="min-h-11 min-w-0 flex-1 rounded-xl bg-white px-3 text-lg font-extrabold ring-1 ring-zinc-300" />
-          <button type="button" onClick={() => setStep(STEPS.length - 1)} aria-label={`Nota atual ${score.score.toFixed(1).replace(".", ",")} de 10. Abrir revisão`}
-            className={`flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-extrabold text-white transition hover:-translate-y-0.5 ${score.verdict === "alta" ? "bg-emerald-600" : score.verdict === "boa" ? "bg-amber-600" : "bg-red-600"}`}>
-            Nota {score.score.toFixed(1).replace(".", ",")}<span className="text-xs font-bold opacity-80">/10</span>
-          </button>
           <p role="status" aria-live="polite" className={`flex items-center gap-1.5 text-sm font-bold ${status === "saved" ? "text-emerald-700" : status === "error" || status === "offline" ? "text-red-700" : "text-muted"}`}>
             <span aria-hidden className={`h-2 w-2 rounded-full ${status === "saved" ? "bg-emerald-600" : status === "error" || status === "offline" ? "bg-red-600" : "animate-pulse bg-amber-500"}`} />{STATUS_TEXT[status]}
           </p>
@@ -302,6 +299,20 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
           </div>
         </nav>
       </Card>
+
+      <div className="sticky top-[70px] z-20" role="region" aria-label="Nota do currículo">
+        <button type="button" onClick={() => setStep(STEPS.length - 1)}
+          className="flex w-full items-center gap-3 rounded-2xl bg-white p-3 text-left shadow-lg ring-1 ring-zinc-200 transition hover:-translate-y-0.5">
+          <span className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl text-white ${score.verdict === "alta" ? "bg-emerald-600" : score.verdict === "boa" ? "bg-amber-600" : "bg-red-600"}`}>
+            <span className="text-xl font-extrabold leading-none">{score.score.toFixed(1).replace(".", ",")}<span className="text-xs opacity-80">/10</span></span>
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-extrabold">Nota do seu currículo agora</span>
+            <span className="line-clamp-2 block text-xs text-muted">{nextTip && nextTip.max - nextTip.points > 0.05 ? `Para subir: ${nextTip.tip}` : score.headline}</span>
+          </span>
+          <span className="shrink-0 text-xs font-extrabold text-brand">Ver detalhes</span>
+        </button>
+      </div>
 
       <Card className="!p-4 sm:!p-6">
         <div key={step} className="step-enter">
