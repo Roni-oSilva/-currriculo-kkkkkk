@@ -18,7 +18,9 @@ test("landing: chamada principal, preço, FAQ e rodapé legal", async ({ page })
   await expect(page.locator("#preco")).toContainText("R$");
   await expect(page.locator("#duvidas details")).not.toHaveCount(0);
   for (const name of ["Termos de uso", "Política de privacidade"]) await expect(page.getByRole("link", { name })).toBeVisible();
-  await expect(page.locator("body")).not.toContainText(/depoimento|clientes satisfeitos/i);
+  await expect(page.locator("#depoimentos")).toContainText("Quem já usou");
+  // a página inicial não tem mais nenhuma menção à avaliação/nota
+  await expect(page.locator("main")).not.toContainText(/avalia[cç][aã]o|nota de/i);
 });
 
 test("landing: seção de profissões no lugar da vitrine de modelos", async ({ page }) => {
