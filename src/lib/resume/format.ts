@@ -38,6 +38,8 @@ export function contactItems(d: ResumeData): string[] {
     p.phone,
     location(d),
     p.address,
+    p.cnh && `CNH ${p.cnh}`,
+    p.availability && `Disponibilidade: ${p.availability}`,
     p.linkedin && p.linkedin.replace(/^https?:\/\/(www\.)?/, ""),
     p.website && p.website.replace(/^https?:\/\/(www\.)?/, ""),
     ...p.otherLinks.filter((l) => l.url).map((l) => l.url.replace(/^https?:\/\//, "")),

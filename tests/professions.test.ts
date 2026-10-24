@@ -10,6 +10,7 @@ describe("catálogo de profissões", () => {
       expect(TEMPLATE_IDS).toContain(p.alt);
       expect(p.alt).not.toBe(p.template);
       expect(p.keywords.length).toBeGreaterThanOrEqual(4);
+      expect(Array.isArray(p.aliases)).toBe(true);
     }
   });
   it("cobre bastante: 100+ profissões, e todos os cinco modelos são recomendados para alguma", () => {
@@ -22,6 +23,23 @@ describe("catálogo de profissões", () => {
     expect(searchProfessions("ADMINISTRATIVO").length).toBeGreaterThan(3);
     expect(searchProfessions("", "Saúde").every((p) => p.category === "Saúde")).toBe(true);
     expect(searchProfessions("zzzz")).toHaveLength(0);
+  });
+  it("encontra profissões populares e informais por nomes alternativos", () => {
+    const first = (q: string) => searchProfessions(q)[0]?.name;
+    expect(first("faxineira")).toBe("Faxineira / Diarista");
+    expect(searchProfessions("diarista").map((p) => p.name)).toContain("Faxineira / Diarista");
+    expect(searchProfessions("domestica").map((p) => p.name)).toContain("Empregada doméstica");
+    expect(searchProfessions("baba").map((p) => p.name)).toContain("Babá");
+    expect(searchProfessions("servente").length).toBeGreaterThanOrEqual(2);
+    expect(searchProfessions("uber").map((p) => p.name)).toContain("Motorista de aplicativo / Taxista");
+    expect(searchProfessions("repositor").map((p) => p.name)).toContain("Repositor(a) de mercadorias");
+    expect(searchProfessions("encanador")[0].name).toMatch(/Encanador/);
+    expect(searchProfessions("tecnico enfermagem").map((p) => p.id)).toContain("tecnico-a-de-enfermagem");
+  });
+  it("ofícios com experiência não usam o modelo de primeiro emprego", () => {
+    for (const id of ["faxineira-diarista", "empregada-domestica", "baba", "auxiliar-de-limpeza", "auxiliar-de-servicos-gerais"]) {
+      expect(getProfession(id)?.template).toBe("classic");
+    }
   });
   it("associa o cargo digitado à profissão e valida ids", () => {
     const p = PROFESSIONS[0];

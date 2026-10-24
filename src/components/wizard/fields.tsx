@@ -45,9 +45,22 @@ export function CheckField({ label, checked, onChange }: { label: string; checke
   );
 }
 
-const small = "min-h-11 min-w-11 rounded-full bg-white px-3 text-sm font-bold text-ink ring-1 ring-zinc-300 hover:bg-chip disabled:opacity-40";
+const small = "min-h-10 min-w-10 rounded-full bg-white px-3 text-sm font-bold text-ink ring-1 ring-zinc-300 hover:bg-chip disabled:opacity-40";
 
-/** Lista editável: adicionar, editar, remover e reordenar itens. */
+/** Bloco recolhível para campos menos usados (mantém o formulário curto). */
+export function Collapsible({ title, hint, count, children, defaultOpen = false }: { title: string; hint?: string; count?: number; children: ReactNode; defaultOpen?: boolean }) {
+  return (
+    <details open={defaultOpen || undefined} className="group rounded-2xl bg-white ring-1 ring-zinc-200 open:shadow-sm">
+      <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 px-4 py-2 font-extrabold">
+        <span className="flex flex-wrap items-center gap-2">{title}{count ? <span className="rounded-full bg-chip px-2 py-0.5 text-xs text-navy">{count}</span> : null}{hint ? <span className="text-sm font-semibold text-muted">{hint}</span> : null}</span>
+        <span aria-hidden className="text-xl text-brand transition-transform duration-300 group-open:rotate-45">+</span>
+      </summary>
+      <div className="step-enter space-y-4 px-4 pb-4">{children}</div>
+    </details>
+  );
+}
+
+/** Lista editável em sanfona: só o item mais recente fica aberto. Adicionar, editar, remover e reordenar. */
 export function ListEditor<T extends { id: string }>({ items, onChange, newItem, addLabel, itemLabel, children, emptyHint }: {
   items: T[]; onChange: (items: T[]) => void; newItem: () => T; addLabel: string; itemLabel: (it: T, i: number) => string;
   children: (it: T, update: (patch: Partial<T>) => void, i: number) => ReactNode; emptyHint?: string;
@@ -60,20 +73,25 @@ export function ListEditor<T extends { id: string }>({ items, onChange, newItem,
     onChange(next);
   };
   return (
-    <div className="space-y-4">
-      {items.length === 0 && emptyHint ? <p className="rounded-xl bg-white p-4 text-sm text-muted">{emptyHint}</p> : null}
+    <div className="space-y-3">
+      {items.length === 0 && emptyHint ? <p className="rounded-xl bg-white p-3 text-sm text-muted ring-1 ring-zinc-200">{emptyHint}</p> : null}
       {items.map((it, i) => (
-        <fieldset key={it.id} className="space-y-4 rounded-2xl bg-white p-4 ring-1 ring-zinc-200">
-          <legend className="px-2 text-sm font-extrabold text-brand-dark">{itemLabel(it, i)}</legend>
-          {children(it, (patch) => onChange(items.map((x) => (x.id === it.id ? { ...x, ...patch } : x))), i)}
-          <div className="flex flex-wrap gap-2">
-            <button type="button" className={small} onClick={() => move(i, -1)} disabled={i === 0} aria-label="Mover para cima">Subir</button>
-            <button type="button" className={small} onClick={() => move(i, 1)} disabled={i === items.length - 1} aria-label="Mover para baixo">Descer</button>
-            <button type="button" className={`${small} !text-red-700`} onClick={() => onChange(items.filter((x) => x.id !== it.id))}>Remover</button>
+        <details key={it.id} open={i === items.length - 1} className="group rounded-2xl bg-white ring-1 ring-zinc-200 open:shadow-sm">
+          <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 px-4 py-2">
+            <span className="font-extrabold text-brand-dark">{itemLabel(it, i)}</span>
+            <span aria-hidden className="text-xl text-brand transition-transform duration-300 group-open:rotate-45">+</span>
+          </summary>
+          <div className="step-enter space-y-4 px-4 pb-4">
+            {children(it, (patch) => onChange(items.map((x) => (x.id === it.id ? { ...x, ...patch } : x))), i)}
+            <div className="flex flex-wrap gap-2 border-t pt-3">
+              <button type="button" className={small} onClick={() => move(i, -1)} disabled={i === 0} aria-label="Mover para cima">Subir</button>
+              <button type="button" className={small} onClick={() => move(i, 1)} disabled={i === items.length - 1} aria-label="Mover para baixo">Descer</button>
+              <button type="button" className={`${small} !text-red-700`} onClick={() => onChange(items.filter((x) => x.id !== it.id))}>Remover</button>
+            </div>
           </div>
-        </fieldset>
+        </details>
       ))}
-      <button type="button" onClick={() => onChange([...items, newItem()])} className="min-h-12 w-full rounded-2xl border-2 border-dashed border-brand px-4 py-3 font-extrabold text-brand hover:bg-chip/50">
+      <button type="button" onClick={() => onChange([...items, newItem()])} className="min-h-12 w-full rounded-2xl border-2 border-dashed border-brand px-4 py-2.5 font-extrabold text-brand transition hover:bg-chip/50">
         + {addLabel}
       </button>
     </div>

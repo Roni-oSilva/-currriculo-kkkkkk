@@ -99,6 +99,8 @@ export const resumeDataSchema = z.object({
       city: text(80),
       state: text(40),
       address: text(160),
+      cnh: text(10),
+      availability: text(60),
       linkedin: url,
       website: url,
       otherLinks: z

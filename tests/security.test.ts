@@ -90,3 +90,13 @@ describe("cadastro e autenticação (validação)", () => {
     expect(loginSchema.safeParse({ email: "ANA@X.COM ", password: "x" })).toMatchObject({ success: true, data: { email: "ana@x.com" } });
   });
 });
+
+describe("CNH e disponibilidade no contato", () => {
+  it("aparecem na linha de contato quando preenchidos", async () => {
+    const { contactItems } = await import("@/lib/resume/format");
+    const r = resumePayloadSchema.parse({ design: {}, data: { personal: { fullName: "A B", phone: "1", cnh: "AB", availability: "Imediata" } } });
+    const items = contactItems(r.data);
+    expect(items).toContain("CNH AB");
+    expect(items).toContain("Disponibilidade: Imediata");
+  });
+});

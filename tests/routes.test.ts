@@ -221,3 +221,15 @@ describe("POST /api/resumes com profissão", () => {
     expect(rows[1].data.objective.targetRole).toBe("");
   });
 });
+
+describe("POST /api/resumes com profissão fora da lista", () => {
+  it("usa o texto digitado como cargo desejado (higienizado e limitado)", async () => {
+    const { POST } = await import("@/app/api/resumes/route");
+    const res = await POST(req("/api/resumes", { method: "POST", body: JSON.stringify({ role: "  Doceira\u0000 de festas  ".padEnd(300, "x"), template: "classic" }) }));
+    expect(res.status).toBe(201);
+    const row = db.table("resumes")[0] as { data: { objective: { targetRole: string } } };
+    expect(row.data.objective.targetRole.startsWith("Doceira de festas")).toBe(true);
+    expect(row.data.objective.targetRole.length).toBeLessThanOrEqual(120);
+    expect(row.data.objective.targetRole).not.toContain("\u0000");
+  });
+});

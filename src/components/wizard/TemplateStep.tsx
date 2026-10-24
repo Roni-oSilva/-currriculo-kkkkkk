@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { Button, Notice } from "@/components/ui";
 import { ACCENT_COLORS, SECTION_LABELS, type ResumeDesign, type SectionKey, type TemplateId } from "@/lib/resume/schema";
 import { TEMPLATE_LIST, getTemplate } from "@/lib/resume/templates";
-import { CheckField } from "./fields";
+import { CheckField, Collapsible } from "./fields";
 
 export function TemplateStep({ design, onDesign, resumeId, hasPhoto, photoUrl, onPhoto, enabledTemplates, recommended }: {
   recommended?: { name: string; template: string };
@@ -51,7 +51,7 @@ export function TemplateStep({ design, onDesign, resumeId, hasPhoto, photoUrl, o
     <div className="space-y-6">
       <div>
         <h3 className="mb-2 text-lg font-extrabold">Modelo</h3>
-        <ul className="grid gap-3 sm:grid-cols-2">
+        <ul className="grid grid-cols-2 gap-3 lg:grid-cols-3">
           {TEMPLATE_LIST.filter((x) => enabledTemplates.includes(x.id)).map((x) => {
             const selected = x.id === design.template;
             return (
@@ -100,8 +100,7 @@ export function TemplateStep({ design, onDesign, resumeId, hasPhoto, photoUrl, o
         )}
       </div>
 
-      <div>
-        <h3 className="mb-2 text-lg font-extrabold">Ordem das seções</h3>
+      <Collapsible title="Ordem das seções" hint="opcional">
         <p className="mb-2 text-sm text-muted">Recomendado pelo RH: resumo, experiência, formação, habilidades e idiomas. Seções vazias não aparecem.</p>
         <ol className="space-y-2">
           {design.sectionOrder.map((k, i) => {
@@ -118,7 +117,7 @@ export function TemplateStep({ design, onDesign, resumeId, hasPhoto, photoUrl, o
             );
           })}
         </ol>
-      </div>
+      </Collapsible>
     </div>
   );
 }
