@@ -9,6 +9,7 @@
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
     "setup": "node scripts/setup.mjs",
+    "check:deploy": "bash scripts/check-deploy.sh",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test"

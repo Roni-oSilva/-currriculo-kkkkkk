@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { configStatus, env } from "@/lib/env";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { renderPreviewPdf } from "@/lib/pdf/render";
+import { renderFinalPdf, renderPreviewPdf } from "@/lib/pdf/render";
+import { processProfilePhoto } from "@/lib/security/image";
+import { TEMPLATE_IDS } from "@/lib/resume/schema";
 import { rasterizePdf } from "@/lib/pdf/rasterize";
 import { sampleResume, samplePhoto } from "@/lib/resume/sample";
 import { clientIp, rateLimit } from "@/lib/security/ratelimit";
@@ -78,7 +80,20 @@ export async function GET(req: Request) {
     return `${r.pageCount} página(s) convertida(s) em imagem`;
   });
 
-  const all = [out.pdf, out.imagem, ...Object.values((out.banco as Record<string, Check>) ?? {})] as Check[];
+  out.modelos = await check(async () => {
+    const photo = await samplePhoto();
+    for (const t of TEMPLATE_IDS) {
+      const s = sampleResume(t);
+      await renderFinalPdf({ data: s.data, design: s.design, photo: s.design.showPhoto ? photo : null });
+    }
+    return `${TEMPLATE_IDS.length} modelos geraram PDF final`;
+  });
+  out.foto = await check(async () => {
+    const out2 = await processProfilePhoto(new Uint8Array(await samplePhoto()));
+    return `foto processada (${out2.length} bytes)`;
+  });
+
+  const all = [out.pdf, out.imagem, out.modelos, out.foto, ...Object.values((out.banco as Record<string, Check>) ?? {})] as Check[];
   out.tudoCerto = all.every((c) => c.ok) && variaveis.NEXT_PUBLIC_SUPABASE_URL && variaveis.NEXT_PUBLIC_SUPABASE_ANON_KEY && variaveis.SUPABASE_SERVICE_ROLE_KEY;
   return NextResponse.json(out, { headers: { "Cache-Control": "no-store" } });
 }

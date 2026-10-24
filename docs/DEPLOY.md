@@ -52,3 +52,9 @@
 
 ## 4. Textos legais
 Preencha razão social/CNPJ/endereço e peça revisão jurídica das páginas `/termos` e `/privacidade` antes de abrir ao público.
+
+## 5. Antes de publicar: simular a Vercel
+```bash
+npm run check:deploy
+```
+Gera o pacote isolado (somente os arquivos que a Vercel inclui), sobe o servidor e testa PDF, imagem da prévia, os 5 modelos e o tratamento de foto. Se faltar algum arquivo (ex.: `Cannot find module .../standard-fonts/Helvetica.cjs`), falha aqui antes de falhar em produção. Em produção, abra `/api/health` para o mesmo diagnóstico.
