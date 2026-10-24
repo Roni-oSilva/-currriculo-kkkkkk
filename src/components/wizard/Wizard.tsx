@@ -13,6 +13,7 @@ import { AtsCard } from "./AtsCard";
 import { findProfessionByRole } from "@/lib/resume/professions";
 import { generateSummary } from "@/lib/resume/summary";
 import { scoreResume } from "@/lib/resume/ats";
+import { stepErrors, stepErrorCount } from "@/lib/resume/validate";
 
 const STEPS = [
   { label: "Você", tip: "Só o essencial: nome, um contato e a vaga que você quer. O resto é opcional e fica em “Mais campos”." },
@@ -60,6 +61,12 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
   const issues = useMemo(() => minimumDataIssues(data), [data]);
   const profession = useMemo(() => findProfessionByRole(data.objective.targetRole), [data.objective.targetRole]);
   const [goingToPreview, setGoing] = useState(false);
+  const [visited, setVisited] = useState<Set<number>>(new Set());
+  const errors = useMemo(() => stepErrors(data, design), [data, design]);
+  const touched = payload !== initial;
+  // Etapa em vermelho: tem erro real e o usuário já mexeu no formulário ou já passou por ela.
+  const isRed = (i: number) => Boolean(errors[i]?.length) && (touched || visited.has(i));
+  const goStep = (i: number) => { setVisited((v) => new Set(v).add(step)); setStep(i); window.scrollTo({ top: 0, behavior: "smooth" }); };
   const [summaryVariant, setSummaryVariant] = useState(0);
   const [summaryMsg, setSummaryMsg] = useState<string | null>(null);
   const score = useMemo(() => scoreResume(data, design), [data, design]);
@@ -258,6 +265,22 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
       );
       default: return (
         <div className="space-y-5">
+          {stepErrorCount(errors) > 0 ? (
+            <div role="alert" className="rounded-2xl border-2 border-red-300 bg-red-50 p-4 text-sm text-red-900">
+              <p className="text-base font-extrabold">Há {stepErrorCount(errors)} problema(s) para corrigir</p>
+              <ul className="mt-2 space-y-2">
+                {Object.entries(errors).map(([i, msgs]) => (
+                  <li key={i} className="rounded-xl bg-white p-3">
+                    <p className="font-extrabold">Etapa {Number(i) + 1}: {STEPS[Number(i)].label}</p>
+                    <ul className="list-disc pl-5">{msgs.map((m) => <li key={m}>{m}</li>)}</ul>
+                    <button type="button" onClick={() => goStep(Number(i))} className="mt-2 min-h-10 rounded-full bg-red-600 px-4 text-sm font-bold text-white">Corrigir agora</button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <Notice tone="ok">Nenhum problema encontrado nas etapas. Confira a nota e veja a prévia.</Notice>
+          )}
           <AtsCard data={data} design={design} />
           <AiPanel resumeId={resumeId} data={data} flush={flush} hasConsent={aiConsent} aiEnabled={aiEnabled} onApply={(d) => setData(() => d)} />
           {issues.length ? <Notice tone="info">Você já pode ver a prévia. Para liberar o PDF, falta: {issues.join(" ").toLowerCase()}</Notice> : null}
@@ -285,12 +308,13 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
           <ol className="flex items-center gap-1 overflow-x-auto pb-1">
             {STEPS.map((s, i) => (
               <li key={s.label} className="flex items-center">
-                <button type="button" onClick={() => setStep(i)} aria-current={i === step ? "step" : undefined} aria-label={`Etapa ${i + 1}: ${s.label}`}
-                  className={`flex min-h-11 items-center gap-2 rounded-full px-3 text-sm font-bold transition ${i === step ? "bg-brand text-white shadow-md" : i < step ? "bg-chip text-navy" : "bg-white text-muted ring-1 ring-zinc-300"}`}>
-                  <span className={`grid h-6 w-6 place-items-center rounded-full text-xs ${i === step ? "bg-white text-brand" : i < step ? "bg-brand text-white" : "bg-zinc-200"}`}>{i < step ? "✓" : i + 1}</span>
-                  <span className={i === step ? "" : "hidden sm:inline"}>{s.label}</span>
+                <button type="button" onClick={() => goStep(i)} aria-current={i === step ? "step" : undefined}
+                  aria-label={`Etapa ${i + 1}: ${s.label}${isRed(i) ? ` — ${errors[i].length} problema(s) para corrigir` : ""}`}
+                  className={`flex min-h-11 items-center gap-2 rounded-full px-3 text-sm font-bold transition ${isRed(i) ? `bg-red-600 text-white ring-2 ring-red-300 ${i === step ? "shadow-md" : ""}` : i === step ? "bg-brand text-white shadow-md" : i < step ? "bg-chip text-navy" : "bg-white text-muted ring-1 ring-zinc-300"}`}>
+                  <span className={`grid h-6 w-6 place-items-center rounded-full text-xs ${isRed(i) ? "bg-white text-red-600" : i === step ? "bg-white text-brand" : i < step ? "bg-brand text-white" : "bg-zinc-200"}`}>{isRed(i) ? "!" : i < step ? "✓" : i + 1}</span>
+                  <span className={i === step || isRed(i) ? "" : "hidden sm:inline"}>{s.label}</span>
                 </button>
-                {i < STEPS.length - 1 ? <span aria-hidden className={`mx-1 h-0.5 w-3 rounded ${i < step ? "bg-brand" : "bg-zinc-300"}`} /> : null}
+                {i < STEPS.length - 1 ? <span aria-hidden className={`mx-1 h-0.5 w-3 rounded ${isRed(i) ? "bg-red-400" : i < step ? "bg-brand" : "bg-zinc-300"}`} /> : null}
               </li>
             ))}
           </ol>
@@ -301,14 +325,14 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
       </Card>
 
       <div className="sticky top-[70px] z-20" role="region" aria-label="Nota do currículo">
-        <button type="button" onClick={() => setStep(STEPS.length - 1)}
+        <button type="button" onClick={() => goStep(STEPS.length - 1)}
           className="flex w-full items-center gap-3 rounded-2xl bg-white p-3 text-left shadow-lg ring-1 ring-zinc-200 transition hover:-translate-y-0.5">
           <span className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl text-white ${score.verdict === "alta" ? "bg-emerald-600" : score.verdict === "boa" ? "bg-amber-600" : "bg-red-600"}`}>
             <span className="text-xl font-extrabold leading-none">{score.score.toFixed(1).replace(".", ",")}<span className="text-xs opacity-80">/10</span></span>
           </span>
           <span className="min-w-0 flex-1">
             <span className="block text-sm font-extrabold">Nota do seu currículo agora</span>
-            <span className="line-clamp-2 block text-xs text-muted">{nextTip && nextTip.max - nextTip.points > 0.05 ? `Para subir: ${nextTip.tip}` : score.headline}</span>
+            <span className="line-clamp-2 text-xs text-muted">{nextTip && nextTip.max - nextTip.points > 0.05 ? `Para subir: ${nextTip.tip}` : score.headline}</span>
           </span>
           <span className="shrink-0 text-xs font-extrabold text-brand">Ver detalhes</span>
         </button>
@@ -318,13 +342,19 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
         <div key={step} className="step-enter">
           <h2 className="text-2xl font-extrabold">{STEPS[step].label}</h2>
           <p className="mb-4 mt-1 text-sm text-muted">{STEPS[step].tip}</p>
+          {isRed(step) ? (
+            <div role="alert" className="mb-4 rounded-2xl border-2 border-red-300 bg-red-50 p-3 text-sm text-red-900">
+              <p className="font-extrabold">Corrija para continuar sem problemas:</p>
+              <ul className="mt-1 list-disc pl-5">{errors[step].map((m) => <li key={m}>{m}</li>)}</ul>
+            </div>
+          ) : null}
           {body}
         </div>
       </Card>
 
       <div className="sticky bottom-0 z-10 -mx-1 flex justify-between gap-3 bg-char/95 p-3 backdrop-blur">
-        <Button variant="light" onClick={() => { setStep((s) => Math.max(0, s - 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }} disabled={step === 0}>Voltar</Button>
-        {step < STEPS.length - 1 ? <Button variant="accent" onClick={() => { setStep((s) => s + 1); window.scrollTo({ top: 0, behavior: "smooth" }); }}>Continuar</Button> : null}
+        <Button variant="light" onClick={() => goStep(Math.max(0, step - 1))} disabled={step === 0}>Voltar</Button>
+        {step < STEPS.length - 1 ? <Button variant="accent" onClick={() => goStep(step + 1)}>Continuar</Button> : null}
       </div>
     </div>
   );
