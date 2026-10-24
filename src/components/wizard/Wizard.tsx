@@ -46,7 +46,7 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
   const [payload, setPayload] = useState(initial);
   const [step, setStep] = useState(0);
   const [photoUrl, setPhotoUrl] = useState(initialPhotoUrl);
-  const { status, flush } = useAutosave(`/api/resumes/${resumeId}`, payload);
+  const { status, flush, error: saveError } = useAutosave(`/api/resumes/${resumeId}`, payload);
 
   const { data, design } = payload;
   const setData = useCallback((fn: (d: ResumeData) => ResumeData) => setPayload((p) => ({ ...p, data: fn(p.data) })), []);
@@ -63,7 +63,7 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
     setGoing(true);
     const ok = await flush();
     if (ok) router.push(`/resume/${resumeId}/preview`);
-    else setGoing(false);
+    else setGoing(false); // o motivo aparece no aviso vermelho abaixo
   }
 
   const allSkills = [...data.skills.technical, ...data.skills.tools, ...data.skills.soft, ...data.skills.domain];
@@ -229,6 +229,7 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
           <AtsCard data={data} design={design} />
           <AiPanel resumeId={resumeId} data={data} flush={flush} hasConsent={aiConsent} aiEnabled={aiEnabled} onApply={(d) => setData(() => d)} />
           {issues.length ? <Notice tone="warn">{issues.join(" ")}</Notice> : null}
+          {saveError ? <Notice tone="error">Não foi possível salvar o currículo: {saveError}. Corrija o campo indicado e tente de novo.</Notice> : null}
           <Button onClick={goPreview} disabled={goingToPreview || issues.length > 0} variant="accent" className="w-full sm:w-auto">{goingToPreview ? "Salvando…" : "Ver prévia do currículo"}</Button>
         </div>
       );

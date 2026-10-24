@@ -155,6 +155,15 @@ describe("PUT/GET/DELETE /api/resumes/[id]", () => {
     expect(row.data.personal.photoPath).toBe("");
   });
 
+  it("aceita link sem https:// e o salva normalizado", async () => {
+    seedResume(); db.table("templates").push({ id: "classic", enabled: true });
+    const { PUT } = await import("@/app/api/resumes/[id]/route");
+    const p = payload();
+    p.data.personal.linkedin = "linkedin.com/in/maria";
+    expect((await PUT(put(p), ctx())).status).toBe(200);
+    expect((db.table("resumes")[0] as { data: { personal: { linkedin: string } } }).data.personal.linkedin).toBe("https://linkedin.com/in/maria");
+  });
+
   it("rejeita URL maliciosa e payload gigante", async () => {
     seedResume(); db.table("templates").push({ id: "classic", enabled: true });
     const { PUT } = await import("@/app/api/resumes/[id]/route");

@@ -68,7 +68,7 @@ export function AiPanel({ resumeId, data, onApply, flush, hasConsent, aiEnabled 
   const reject = (s: Suggestion) => setResult((r) => (r ? { ...r, suggestions: r.suggestions.filter((x) => x.id !== s.id) } : r));
 
   if (!aiEnabled) {
-    return <Notice tone="warn">O assistente de sugestões ainda não foi ativado neste ambiente. Você pode continuar normalmente e ver a nota de aceitação acima.</Notice>;
+    return null;
   }
 
   const ops: [Op, string][] = [["summary", "Criar resumo profissional"], ["experience", "Melhorar experiências"], ["review", "Revisar texto e lacunas"], ["full", "Fazer tudo"]];

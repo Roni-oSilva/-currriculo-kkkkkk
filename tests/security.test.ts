@@ -100,3 +100,14 @@ describe("CNH e disponibilidade no contato", () => {
     expect(items).toContain("Disponibilidade: Imediata");
   });
 });
+
+describe("links digitados sem https://", () => {
+  it("acrescenta https:// em domínios e mantém bloqueio de esquemas perigosos", () => {
+    const ok = resumePayloadSchema.parse({ design: {}, data: { personal: { linkedin: "linkedin.com/in/maria", website: " www.meusite.com.br " } } });
+    expect(ok.data.personal.linkedin).toBe("https://linkedin.com/in/maria");
+    expect(ok.data.personal.website).toBe("https://www.meusite.com.br");
+    for (const bad of ["javascript:alert(1)", "data:text/html,x", "ftp://x.com", "file:///etc/passwd"]) {
+      expect(resumePayloadSchema.safeParse({ design: {}, data: { personal: { website: bad } } }).success).toBe(false);
+    }
+  });
+});

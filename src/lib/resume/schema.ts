@@ -4,10 +4,13 @@ import { cleanText, isSafeHttpUrl } from "@/lib/security/sanitize";
 const text = (max: number) =>
   z.string().max(max).transform(cleanText).default("");
 
+/** "linkedin.com/in/x" vira "https://linkedin.com/in/x"; "javascript:..." continua inválido. */
+const withScheme = (v: string) => (v && !/^[a-z][a-z0-9+.-]*:/i.test(v) ? `https://${v.replace(/^\/+/, "")}` : v);
+
 const url = z
   .string()
   .max(300)
-  .transform(cleanText)
+  .transform((v) => withScheme(cleanText(v)))
   .refine((v) => v === "" || isSafeHttpUrl(v), "Informe uma URL começando com http:// ou https://")
   .default("");
 

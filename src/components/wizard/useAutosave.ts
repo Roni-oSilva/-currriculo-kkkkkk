@@ -10,6 +10,7 @@ export type SaveStatus = "saved" | "dirty" | "saving" | "offline" | "error";
  */
 export function useAutosave<T>(url: string, payload: T, onSaved?: (r: { version: number }) => void) {
   const [status, setStatus] = useState<SaveStatus>("saved");
+  const [error, setError] = useState<string | null>(null);
   const latest = useRef(payload);
   const revision = useRef(0);
   const savedRevision = useRef(0);
@@ -26,15 +27,20 @@ export function useAutosave<T>(url: string, payload: T, onSaved?: (r: { version:
     const run = (async () => {
       try {
         const res = await fetch(url, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(latest.current) });
-        if (!res.ok) throw new Error(String(res.status));
-        const json = await res.json();
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          const first = json?.issues?.[0];
+          throw new Error(first ? `${first.message} (${first.path})` : json?.error ?? `Erro ${res.status}`);
+        }
         savedRevision.current = rev;
         attempts.current = 0;
+        setError(null);
         onSaved?.(json);
         setStatus(revision.current === rev ? "saved" : "dirty");
         return true;
-      } catch {
+      } catch (e) {
         attempts.current += 1;
+        setError(e instanceof Error ? e.message : "Falha ao salvar");
         setStatus(typeof navigator !== "undefined" && !navigator.onLine ? "offline" : "error");
         timer.current = setTimeout(() => void save(), Math.min(30_000, 1000 * 2 ** attempts.current));
         return false;
@@ -77,5 +83,5 @@ export function useAutosave<T>(url: string, payload: T, onSaved?: (r: { version:
     return save();
   }, [save]);
 
-  return { status, flush };
+  return { status, flush, error };
 }
