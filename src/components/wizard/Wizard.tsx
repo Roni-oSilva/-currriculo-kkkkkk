@@ -11,6 +11,8 @@ import { TemplateStep } from "./TemplateStep";
 import { AiPanel } from "./AiPanel";
 import { AtsCard } from "./AtsCard";
 import { findProfessionByRole } from "@/lib/resume/professions";
+import { generateSummary } from "@/lib/resume/summary";
+import { scoreResume } from "@/lib/resume/ats";
 
 const STEPS = [
   { label: "Você", tip: "Só o essencial: nome, um contato e a vaga que você quer. O resto é opcional e fica em “Mais campos”." },
@@ -58,6 +60,19 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
   const issues = useMemo(() => minimumDataIssues(data), [data]);
   const profession = useMemo(() => findProfessionByRole(data.objective.targetRole), [data.objective.targetRole]);
   const [goingToPreview, setGoing] = useState(false);
+  const [summaryVariant, setSummaryVariant] = useState(0);
+  const [summaryMsg, setSummaryMsg] = useState<string | null>(null);
+  const score = useMemo(() => scoreResume(data, design), [data, design]);
+
+  function makeSummary(length: "short" | "detailed") {
+    if (!data.objective.keywords.length && !data.skills.technical.length) {
+      setSummaryMsg("Adicione ao menos uma palavra-chave (ex.: atendimento, organização) para gerar o resumo.");
+      return;
+    }
+    setSummaryMsg(null);
+    objective({ summary: generateSummary(data, length, summaryVariant) });
+    setSummaryVariant((v) => v + 1);
+  }
 
   async function goPreview() {
     setGoing(true);
@@ -82,7 +97,23 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
           <div className="grid gap-3 sm:grid-cols-2">
             <TextField label="Vaga ou cargo desejado" value={data.objective.targetRole} onChange={(v) => objective({ targetRole: v })} />
             <SelectField label="Tipo de vaga" value={data.objective.jobType} onChange={(v) => objective({ jobType: v })} options={JOB_TYPES} />
-            <div className="sm:col-span-2"><AreaField label="Resumo profissional" rows={4} maxLength={1500} value={data.objective.summary} onChange={(v) => objective({ summary: v })} hint="De 3 a 5 linhas sobre você e o que sabe fazer. Dica: o assistente da revisão pode melhorar o texto sem mudar os fatos." /></div>
+            <div className="space-y-3 rounded-2xl bg-chip/40 p-4 sm:col-span-2">
+              <h3 className="font-extrabold">Resumo profissional</h3>
+              <TagInput label="Palavras-chave sobre você" values={data.objective.keywords} onChange={(v) => objective({ keywords: v })} hint="Digite e aperte Enter. Ex.: atendimento, organização, vendas, limpeza." />
+              {profession ? (
+                <ul className="flex flex-wrap gap-2" aria-label="Sugestões da sua profissão">
+                  {profession.keywords.filter((k) => !data.objective.keywords.includes(k)).slice(0, 6).map((k) => (
+                    <li key={k}><button type="button" onClick={() => objective({ keywords: [...data.objective.keywords, k] })} className="min-h-9 rounded-full bg-white px-3 text-xs font-bold text-navy ring-1 ring-brand transition hover:-translate-y-0.5">+ {k}</button></li>
+                  ))}
+                </ul>
+              ) : null}
+              <div className="flex flex-wrap gap-2">
+                <Button variant="outline" onClick={() => makeSummary("short")} className="!min-h-11 text-sm">Gerar resumo curto</Button>
+                <Button variant="primary" onClick={() => makeSummary("detailed")} className="!min-h-11 text-sm">Gerar resumo detalhado</Button>
+              </div>
+              {summaryMsg ? <Notice tone="warn">{summaryMsg}</Notice> : null}
+              <AreaField label="Seu resumo (você pode editar)" rows={5} maxLength={1500} value={data.objective.summary} onChange={(v) => objective({ summary: v })} hint="Criado só com o que você informou. Clique em gerar de novo para outra redação." />
+            </div>
           </div>
           <Collapsible title="Mais campos" hint="CNH, disponibilidade, LinkedIn…">
             <div className="grid gap-3 sm:grid-cols-2">
@@ -228,9 +259,9 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
         <div className="space-y-5">
           <AtsCard data={data} design={design} />
           <AiPanel resumeId={resumeId} data={data} flush={flush} hasConsent={aiConsent} aiEnabled={aiEnabled} onApply={(d) => setData(() => d)} />
-          {issues.length ? <Notice tone="warn">{issues.join(" ")}</Notice> : null}
+          {issues.length ? <Notice tone="info">Você já pode ver a prévia. Para liberar o PDF, falta: {issues.join(" ").toLowerCase()}</Notice> : null}
           {saveError ? <Notice tone="error">Não foi possível salvar o currículo: {saveError}. Corrija o campo indicado e tente de novo.</Notice> : null}
-          <Button onClick={goPreview} disabled={goingToPreview || issues.length > 0} variant="accent" className="w-full sm:w-auto">{goingToPreview ? "Salvando…" : "Ver prévia do currículo"}</Button>
+          <Button onClick={goPreview} disabled={goingToPreview} variant="accent" className="w-full sm:w-auto">{goingToPreview ? "Salvando…" : "Ver prévia do currículo"}</Button>
         </div>
       );
     }
@@ -245,6 +276,10 @@ export function Wizard({ resumeId, initial, photoUrl: initialPhotoUrl, aiEnabled
           <label className="sr-only" htmlFor="title">Título do currículo</label>
           <input id="title" value={payload.title} onChange={(e) => setPayload((p) => ({ ...p, title: e.target.value }))} maxLength={100}
             className="min-h-11 min-w-0 flex-1 rounded-xl bg-white px-3 text-lg font-extrabold ring-1 ring-zinc-300" />
+          <button type="button" onClick={() => setStep(STEPS.length - 1)} aria-label={`Nota atual ${score.score.toFixed(1).replace(".", ",")} de 10. Abrir revisão`}
+            className={`flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-extrabold text-white transition hover:-translate-y-0.5 ${score.verdict === "alta" ? "bg-emerald-600" : score.verdict === "boa" ? "bg-amber-600" : "bg-red-600"}`}>
+            Nota {score.score.toFixed(1).replace(".", ",")}<span className="text-xs font-bold opacity-80">/10</span>
+          </button>
           <p role="status" aria-live="polite" className={`flex items-center gap-1.5 text-sm font-bold ${status === "saved" ? "text-emerald-700" : status === "error" || status === "offline" ? "text-red-700" : "text-muted"}`}>
             <span aria-hidden className={`h-2 w-2 rounded-full ${status === "saved" ? "bg-emerald-600" : status === "error" || status === "offline" ? "bg-red-600" : "animate-pulse bg-amber-500"}`} />{STATUS_TEXT[status]}
           </p>

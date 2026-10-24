@@ -119,6 +119,7 @@ export const resumeDataSchema = z.object({
       targetRole: text(120),
       area: text(120),
       summary: text(1500),
+      keywords: stringList,
       jobType: text(40),
       jobDescription: text(6000),
     })

@@ -7,6 +7,7 @@ import { configStatus } from "@/lib/env";
 import { formatBRL, getSettings } from "@/lib/settings";
 import { decideDownload } from "@/lib/access";
 import { maskPhoto, normalizeResumeRow, UUID_RE } from "@/lib/api";
+import { minimumDataIssues } from "@/lib/resume/schema";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Prévia do currículo" };
@@ -30,7 +31,7 @@ export default async function PreviewPage({ params }: { params: Promise<{ id: st
       <SiteHeader signedIn />
       <main id="conteudo">
         <PreviewClient resumeId={id} version={resume.version} data={maskPhoto(resume.data)} design={resume.design} priceLabel={formatBRL(settings.priceCents)}
-          paymentsEnabled={configStatus.payments() && configStatus.supabaseAdmin()} alreadyPaid={decision.allowed} repurchaseNotice={settings.repurchaseOnEdit} />
+          paymentsEnabled={configStatus.payments() && configStatus.supabaseAdmin()} alreadyPaid={decision.allowed} missingData={minimumDataIssues(resume.data)} repurchaseNotice={settings.repurchaseOnEdit} />
       </main>
     </>
   );

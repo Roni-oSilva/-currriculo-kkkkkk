@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { Button, Card, LinkButton, Notice } from "./ui";
 import { AtsCard } from "./wizard/AtsCard";
 import { DownloadButton } from "./DownloadButton";
@@ -16,9 +17,11 @@ interface Props {
   paymentsEnabled: boolean;
   alreadyPaid: boolean;
   repurchaseNotice: boolean;
+  /** Dados mínimos que ainda faltam para liberar o PDF (a prévia abre mesmo assim). */
+  missingData: string[];
 }
 
-export function PreviewClient({ resumeId, version, data, design, priceLabel, paymentsEnabled, alreadyPaid, repurchaseNotice }: Props) {
+export function PreviewClient({ resumeId, version, data, design, priceLabel, paymentsEnabled, alreadyPaid, repurchaseNotice, missingData }: Props) {
   const [pages, setPages] = useState<string[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -134,13 +137,14 @@ export function PreviewClient({ resumeId, version, data, design, priceLabel, pay
               <h2 className="text-xl font-extrabold">Desbloquear PDF</h2>
               <p className="text-3xl font-extrabold text-brand">{priceLabel}</p>
               <p className="text-sm text-muted">Pagamento único via Pix por esta versão do currículo. O download é liberado automaticamente após a confirmação.</p>
+              {missingData.length ? <Notice tone="info">Para liberar o PDF, complete: {missingData.join(" ").toLowerCase()} <Link className="underline" href={`/resume/${resumeId}/edit`}>Editar agora</Link></Notice> : null}
               {!paymentsEnabled ? <Notice tone="warn">Pagamentos ainda não configurados neste ambiente (veja docs/PAYMENTS.md).</Notice> : null}
               {payErr ? <Notice tone="error">{payErr}</Notice> : null}
 
               {!charge || charge.status === "expired" || charge.status === "cancelled" ? (
                 <>
                   {charge ? <Notice tone="warn">{charge.status === "expired" ? "O Pix expirou." : "A cobrança foi cancelada."} Gere um novo para tentar de novo.</Notice> : null}
-                  <Button onClick={unlock} disabled={creating || !paymentsEnabled} className="w-full">{creating ? "Gerando Pix…" : charge ? "Gerar novo Pix" : "Desbloquear meu currículo"}</Button>
+                  <Button onClick={unlock} disabled={creating || !paymentsEnabled || missingData.length > 0} className="w-full">{creating ? "Gerando Pix…" : charge ? "Gerar novo Pix" : "Desbloquear meu currículo"}</Button>
                 </>
               ) : charge.status === "pending" ? (
                 <div className="space-y-3" aria-live="polite">

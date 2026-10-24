@@ -1,7 +1,6 @@
 import { authenticate, isResponse, json, jsonError, limited, loadOwnedResume, loadPhoto } from "@/lib/api";
 import { renderPreviewPdf } from "@/lib/pdf/render";
 import { rasterizePdf } from "@/lib/pdf/rasterize";
-import { minimumDataIssues } from "@/lib/resume/schema";
 import { logEvent } from "@/lib/log";
 import { getSettings } from "@/lib/settings";
 
@@ -23,8 +22,6 @@ export async function GET(_req: Request, { params }: Ctx) {
 
   const resume = await loadOwnedResume(ctx, (await params).id);
   if (!resume) return jsonError("Currículo não encontrado.", 404);
-  const issues = minimumDataIssues(resume.data);
-  if (issues.length) return jsonError(issues.join(" "), 422);
 
   try {
     const photo = resume.design.showPhoto ? await loadPhoto(ctx.user.id, resume.data.personal.photoPath) : null;

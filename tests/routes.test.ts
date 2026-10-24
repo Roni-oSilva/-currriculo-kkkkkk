@@ -130,6 +130,17 @@ describe("GET /api/resumes/[id]/preview", () => {
     expect(JSON.stringify(json)).not.toMatch(/\.pdf|resume-files|signed/);
     expect(db.storage["resume-files"]?.size ?? 0).toBe(0);
   });
+  it("abre a prévia (com marca d'água) mesmo com o formulário vazio, mas continua sem liberar PDF", async () => {
+    const { resumePayloadSchema } = await import("@/lib/resume/schema");
+    const empty = resumePayloadSchema.parse({ data: {}, design: {} });
+    db.table("resumes").push({ id: R, user_id: A, title: "T", data: empty.data, design: empty.design, template: "classic", status: "draft", version: 1, updated_at: new Date().toISOString() });
+    const { GET } = await import("@/app/api/resumes/[id]/preview/route");
+    const res = await GET(req(`/api/resumes/${R}/preview`), ctx());
+    expect(res.status).toBe(200);
+    expect((await res.json()).pages[0]).toMatch(/^data:image\/png/);
+    const { GET: download } = await import("@/app/api/resumes/[id]/download/route");
+    expect((await download(req(`/api/resumes/${R}/download`), ctx())).status).toBe(402);
+  });
   it("não permite prévia de currículo alheio", async () => {
     seedResume(); currentUser = { id: B };
     const { GET } = await import("@/app/api/resumes/[id]/preview/route");
