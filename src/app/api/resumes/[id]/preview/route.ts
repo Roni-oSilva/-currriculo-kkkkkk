@@ -15,22 +15,32 @@ type Ctx = { params: Promise<{ id: string }> };
  * ou URL permanente é exposto antes do pagamento.
  */
 export async function GET(_req: Request, { params }: Ctx) {
-  const ctx = await authenticate();
-  if (isResponse(ctx)) return ctx;
-  const rl = limited(`preview:${ctx.user.id}`, 30, 60_000);
-  if (rl) return rl;
-
-  const resume = await loadOwnedResume(ctx, (await params).id);
-  if (!resume) return jsonError("Currículo não encontrado.", 404);
-
+  let stage = "sessão";
   try {
-    const photo = resume.design.showPhoto ? await loadPhoto(ctx.user.id, resume.data.personal.photoPath) : null;
+    const ctx = await authenticate();
+    if (isResponse(ctx)) return ctx;
+    const rl = limited(`preview:${ctx.user.id}`, 30, 60_000);
+    if (rl) return rl;
+
+    stage = "leitura do currículo";
+    const resume = await loadOwnedResume(ctx, (await params).id);
+    if (!resume) return jsonError("Currículo não encontrado.", 404);
+
+    stage = "foto";
+    const photo = resume.design.showPhoto ? await loadPhoto(ctx.user.id, resume.data.personal.photoPath).catch(() => null) : null;
+
+    stage = "configurações de preço";
     const { priceCents } = await getSettings();
+
+    stage = "montagem do PDF";
     const pdf = await renderPreviewPdf({ data: resume.data, design: resume.design, photo, priceCents });
+
+    stage = "conversão em imagem";
     const { pages, pageCount } = await rasterizePdf(pdf, 1.5);
     return json({ pages, pageCount, version: resume.version });
   } catch (e) {
-    await logEvent("error", "preview_failed", String((e as Error).message));
-    return jsonError("Não foi possível gerar a prévia agora. Tente novamente.", 500);
+    const detail = String((e as Error)?.message ?? e).slice(0, 200);
+    await logEvent("error", "preview_failed", detail, { stage });
+    return jsonError("Não foi possível gerar a prévia agora.", 500, { stage, detail });
   }
 }

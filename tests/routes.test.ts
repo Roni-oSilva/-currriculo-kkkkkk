@@ -141,6 +141,15 @@ describe("GET /api/resumes/[id]/preview", () => {
     const { GET: download } = await import("@/app/api/resumes/[id]/download/route");
     expect((await download(req(`/api/resumes/${R}/download`), ctx())).status).toBe(402);
   });
+  it("se algo falhar, responde JSON com a etapa e o motivo (nunca página de erro em branco)", async () => {
+    seedResume({ data: 12345 });
+    const { GET } = await import("@/app/api/resumes/[id]/preview/route");
+    const res = await GET(req(`/api/resumes/${R}/preview`), ctx());
+    expect(res.status).toBe(500);
+    const json = await res.json();
+    expect(json.stage).toBe("leitura do currículo");
+    expect(typeof json.detail).toBe("string");
+  });
   it("não permite prévia de currículo alheio", async () => {
     seedResume(); currentUser = { id: B };
     const { GET } = await import("@/app/api/resumes/[id]/preview/route");

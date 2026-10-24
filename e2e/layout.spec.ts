@@ -60,6 +60,16 @@ test("APIs privadas respondem sem vazar dados quando não autenticado", async ({
   expect([401, 503]).toContain(w.status());
 });
 
+test("/api/health diagnostica o ambiente sem expor segredos", async ({ request }) => {
+  const r = await request.get("/api/health");
+  expect(r.status()).toBe(200);
+  const j = await r.json();
+  expect(j.pdf.ok).toBe(true);
+  expect(j.imagem.ok).toBe(true);
+  expect(JSON.stringify(j)).not.toMatch(/eyJ|sb_secret|APP_USR|sk-/);
+  for (const v of Object.values(j.variaveis)) expect(typeof v).toBe("boolean");
+});
+
 test("teclado: o link 'Pular para o conteúdo' é o primeiro foco", async ({ page, isMobile }) => {
   test.skip(isMobile, "navegação por teclado só em desktop");
   await page.goto("/");

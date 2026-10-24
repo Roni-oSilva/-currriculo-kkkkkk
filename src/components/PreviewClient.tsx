@@ -25,6 +25,7 @@ export function PreviewClient({ resumeId, version, data, design, priceLabel, pay
   const [pages, setPages] = useState<string[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [errorDetail, setErrorDetail] = useState<string | null>(null);
   const [charge, setCharge] = useState<ChargeView | null>(null);
   const [payErr, setPayErr] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
@@ -37,8 +38,12 @@ export function PreviewClient({ resumeId, version, data, design, priceLabel, pay
     setLoading(true); setError(null);
     try {
       const res = await fetch(`/api/resumes/${resumeId}/preview`, { cache: "no-store" });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error ?? "Falha ao gerar a prévia.");
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setErrorDetail(json.stage ? `Etapa: ${json.stage}. ${json.detail ?? ""}` : `Resposta ${res.status} do servidor.`);
+        throw new Error(json.error ?? "Falha ao gerar a prévia.");
+      }
+      setErrorDetail(null);
       setPages(json.pages);
     } catch (e) { setError((e as Error).message); } finally { setLoading(false); }
   }, [resumeId]);
@@ -105,7 +110,7 @@ export function PreviewClient({ resumeId, version, data, design, priceLabel, pay
             </div>
           </div>
           <p className="mb-3 text-sm text-muted">Mude o que quiser até achar que está bom: edite, gere a prévia de novo e confira a paginação. Só pague quando estiver satisfeito.</p>
-          {error ? <Notice tone="error">{error}</Notice> : null}
+          {error ? <Notice tone="error">{error}{errorDetail ? <span className="mt-1 block text-xs font-medium opacity-90">Detalhe técnico: {errorDetail}</span> : null} Se persistir, abra <a className="underline" href="/api/health" target="_blank" rel="noreferrer">/api/health</a> e envie o resultado ao suporte.</Notice> : null}
           <div ref={frame} className="protected space-y-4" aria-busy={loading}>
             {loading && !pages ? <div className="grid aspect-[1/1.414] place-items-center rounded-xl bg-white font-bold text-muted">Gerando prévia…</div> : null}
             {pages?.map((src, i) => (
