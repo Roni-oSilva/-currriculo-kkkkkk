@@ -4,6 +4,8 @@ import { CountUp, Marquee, Reveal, Sticker, Words } from "@/components/Motion";
 import { formatBRL, getSettings } from "@/lib/settings";
 import { getSessionUser } from "@/lib/auth";
 import { env } from "@/lib/env";
+import Testimonials from "@/components/ui/testimonial";
+import { TESTIMONIALS } from "@/lib/testimonials";
 
 export const dynamic = "force-dynamic";
 
@@ -213,6 +215,9 @@ export default async function Home() {
             ))}
           </ul>
         </section>
+
+        {/* DEPOIMENTOS */}
+        <Testimonials items={TESTIMONIALS} />
 
         {/* PREÇO */}
         <section id="preco" className="mx-auto max-w-6xl scroll-mt-20 rounded-[32px] bg-paper p-6 text-center sm:p-10">

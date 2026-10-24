@@ -28,6 +28,19 @@ test("landing: seção de profissões no lugar da vitrine de modelos", async ({ 
   await expect(page.getByRole("link", { name: "Profissões" }).first()).toBeVisible();
 });
 
+test("depoimentos: 4 relatos com foto e sem rolagem horizontal", async ({ page }) => {
+  await page.goto("/");
+  const cards = page.locator("#depoimentos article");
+  await expect(cards).toHaveCount(4);
+  for (const name of ["Camila A.", "Lucas R.", "João Pedro M.", "Mariana S."]) await expect(page.locator("#depoimentos")).toContainText(name);
+  await page.locator("#depoimentos").scrollIntoViewIfNeeded();
+  for (const img of await page.locator("#depoimentos img").all()) {
+    await img.scrollIntoViewIfNeeded();
+    await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 50), { timeout: 20_000 }).toBe(true);
+  }
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+});
+
 test("imagens de exemplo dos modelos são servidas como arquivos estáticos", async ({ request }) => {
   for (const id of ["classic", "modern", "minimal", "first-job", "creative"]) {
     const r = await request.get(`/examples/${id}.png`);
