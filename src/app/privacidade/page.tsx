@@ -15,6 +15,8 @@ export default function Page() {
       <p>Execução do serviço contratado (criar e entregar o currículo), cumprimento de obrigação legal (registros fiscais de pagamento), legítimo interesse (segurança e prevenção a fraudes) e consentimento (uso do assistente e foto).</p>
       <h2>Assistente de sugestões</h2>
       <p>Somente com o seu consentimento expresso, enviamos ao serviço externo de análise de texto configurado o conteúdo profissional do currículo (experiências, formação, cursos, habilidades, projetos e a descrição da vaga, se informada). Não enviamos e-mail, telefone, endereço, links nem foto. Você pode usar o serviço sem o assistente.</p>
+      <h2>Depoimentos</h2>
+      <p>Se você enviar um depoimento, publicamos o nome (como você informar), a foto (opcional) e o texto na página inicial somente após a sua autorização expressa e a aprovação da nossa equipe. Você pode editar ou remover o depoimento a qualquer momento em “Deixe seu depoimento” ou pelo e-mail de contato.</p>
       <h2>Compartilhamento</h2>
       <p>Supabase (banco, autenticação e armazenamento), Mercado Pago (pagamentos) e o serviço de análise de texto configurado, como operadores, e autoridades quando exigido por lei.</p>
       <h2>Retenção e exclusão</h2>

@@ -7,7 +7,8 @@
 export interface Testimonial {
   name: string;
   quote: string;
-  photo: string;
+  /** Caminho estático (/depoimentos/...) ou URL assinada. Sem foto, o cartão mostra a inicial do nome. */
+  photo: string | null;
 }
 
 export const TESTIMONIALS: Testimonial[] = [

@@ -22,7 +22,7 @@ export async function createDb() {
     alter default privileges in schema public grant all on sequences to anon, authenticated, service_role;
     alter default privileges in schema public grant execute on functions to anon, authenticated, service_role;
   `);
-  for (const f of ["0001_schema.sql", "0002_rls.sql", "0003_storage.sql", "0004_price_10.sql"]) {
+  for (const f of ["0001_schema.sql", "0002_rls.sql", "0003_storage.sql", "0004_price_10.sql", "0005_testimonials.sql"]) {
     await db.exec(readFileSync(path.join(process.cwd(), "supabase/migrations", f), "utf8"));
   }
   return db;

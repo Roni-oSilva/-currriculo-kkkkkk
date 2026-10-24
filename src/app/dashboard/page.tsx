@@ -38,6 +38,13 @@ export default async function Dashboard() {
           </div>
         </Card>
 
+        {(payments ?? []).some((p) => p.status === "approved") ? (
+          <Card className="flex flex-wrap items-center justify-between gap-3 !p-4">
+            <p className="font-semibold">Gostou do resultado? Conte para outras pessoas como foi.</p>
+            <LinkButton href="/depoimento" variant="outline" className="!min-h-11 text-sm">Deixar meu depoimento</LinkButton>
+          </Card>
+        ) : null}
+
         {!resumes?.length ? (
           <Card className="space-y-3 text-center">
             <h2 className="text-xl font-extrabold">Você ainda não tem currículos</h2>

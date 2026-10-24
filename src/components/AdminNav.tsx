@@ -1,7 +1,7 @@
 import Link from "next/link";
 
-export function AdminNav({ current }: { current: "overview" | "settings" | "logs" }) {
-  const items = [["overview", "/admin", "Visão geral"], ["settings", "/admin/settings", "Preço e modelos"], ["logs", "/admin/logs", "Logs"]] as const;
+export function AdminNav({ current }: { current: "overview" | "settings" | "testimonials" | "logs" }) {
+  const items = [["overview", "/admin", "Visão geral"], ["settings", "/admin/settings", "Preço e modelos"], ["testimonials", "/admin/testimonials", "Depoimentos"], ["logs", "/admin/logs", "Logs"]] as const;
   return (
     <nav aria-label="Administração" className="flex flex-wrap gap-2">
       {items.map(([k, href, label]) => (

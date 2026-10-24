@@ -17,6 +17,6 @@ describe("supabase/verificacao.sql", () => {
     const erros = rows.filter((r) => Object.values(r).some((x) => typeof x === "string" && x.startsWith("ERRO")));
     expect(erros).toEqual([]);
     expect(rows.some((r) => r.key === "price_cents" && JSON.stringify(r.value) === "1000")).toBe(true);
-    expect(rows.filter((r) => r.rls === "OK")).toHaveLength(10);
+    expect(rows.filter((r) => r.rls === "OK")).toHaveLength(11);
   });
 });

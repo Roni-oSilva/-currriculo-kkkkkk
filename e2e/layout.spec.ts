@@ -38,6 +38,7 @@ test("depoimentos: 4 relatos com foto e sem rolagem horizontal", async ({ page }
     await img.scrollIntoViewIfNeeded();
     await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 50), { timeout: 20_000 }).toBe(true);
   }
+  await expect(page.getByRole("link", { name: "Deixe também o seu depoimento" })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
 });
 
@@ -58,7 +59,7 @@ test("botões e campos têm área de toque adequada (≥ 44px) nas telas de logi
 });
 
 test("rotas privadas não abrem sem sessão", async ({ page }) => {
-  for (const p of ["/dashboard", "/admin", "/account", "/resume/new", "/resume/00000000-0000-4000-8000-000000000000/edit"]) {
+  for (const p of ["/dashboard", "/admin", "/account", "/resume/new", "/depoimento", "/admin/testimonials", "/resume/00000000-0000-4000-8000-000000000000/edit"]) {
     await page.goto(p);
     await expect(page).toHaveURL(/configuracao-pendente|\/login/);
   }

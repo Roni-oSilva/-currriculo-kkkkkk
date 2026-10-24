@@ -6,6 +6,7 @@ import { getSessionUser } from "@/lib/auth";
 import { env } from "@/lib/env";
 import Testimonials from "@/components/ui/testimonial";
 import { TESTIMONIALS } from "@/lib/testimonials";
+import { getApprovedTestimonials } from "@/lib/testimonials-server";
 
 export const dynamic = "force-dynamic";
 
@@ -74,7 +75,7 @@ const FAQ = [
 ];
 
 export default async function Home() {
-  const [{ priceCents }, user] = await Promise.all([getSettings(), getSessionUser()]);
+  const [{ priceCents }, user, approved] = await Promise.all([getSettings(), getSessionUser(), getApprovedTestimonials()]);
   const price = formatBRL(priceCents);
   const cta = user ? "/resume/new" : "/cadastro";
   return (
@@ -192,7 +193,7 @@ export default async function Home() {
         </section>
 
         {/* DEPOIMENTOS */}
-        <Testimonials items={TESTIMONIALS} />
+        <Testimonials items={[...TESTIMONIALS, ...approved]} ctaHref={user ? "/depoimento" : "/login?next=/depoimento"} />
 
         {/* PREÇO */}
         <section id="preco" className="mx-auto max-w-6xl scroll-mt-20 rounded-[32px] bg-paper p-6 text-center sm:p-10">

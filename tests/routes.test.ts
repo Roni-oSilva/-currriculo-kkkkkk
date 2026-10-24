@@ -262,3 +262,82 @@ describe("POST /api/resumes com profissão fora da lista", () => {
     expect(row.data.objective.targetRole).not.toContain("\u0000");
   });
 });
+
+describe("depoimentos: /api/testimonials", () => {
+  const form = (o: Record<string, string>) => { const f = new FormData(); Object.entries(o).forEach(([k, v]) => f.set(k, v)); return f; };
+  const good = { name: "Maria S.", quote: "O site é simples, rápido e deixa tudo organizado. Recomendo muito.", consent: "true" };
+  const post = (f: FormData) => req("/api/testimonials", { method: "POST", body: f });
+  const pay = (status = "approved") => db.table("payments").push({ id: "p1", user_id: A, resume_id: R, resume_version: 1, status });
+
+  it("exige login (401)", async () => {
+    currentUser = null;
+    const { POST } = await import("@/app/api/testimonials/route");
+    expect((await POST(post(form(good)))).status).toBe(401);
+  });
+  it("só libera para quem tem pagamento aprovado (403)", async () => {
+    const { POST } = await import("@/app/api/testimonials/route");
+    expect((await POST(post(form(good)))).status).toBe(403);
+    pay("pending");
+    expect((await POST(post(form(good)))).status).toBe(403);
+    expect(db.table("testimonials")).toHaveLength(0);
+  });
+  it("exige a autorização expressa e valida tamanho do texto", async () => {
+    pay();
+    const { POST } = await import("@/app/api/testimonials/route");
+    expect((await POST(post(form({ ...good, consent: "" })))).status).toBe(422);
+    expect((await POST(post(form({ ...good, quote: "curto" })))).status).toBe(422);
+    expect((await POST(post(form({ ...good, name: "A" })))).status).toBe(422);
+    expect((await POST(post(form({ ...good, quote: "x".repeat(601) })))).status).toBe(422);
+    expect(db.table("testimonials")).toHaveLength(0);
+  });
+  it("salva como pendente, higieniza o texto e permite editar", async () => {
+    pay();
+    const { POST } = await import("@/app/api/testimonials/route");
+    const res = await POST(post(form({ ...good, name: "  Maria\u0000 S.  " })));
+    expect(res.status).toBe(201);
+    const row = db.table("testimonials")[0] as { display_name: string; user_id: string; consent_at: string; status?: string };
+    expect(row.display_name).toBe("Maria S.");
+    expect(row.user_id).toBe(A);
+    expect(row.consent_at).toBeTruthy();
+    expect((await POST(post(form({ ...good, quote: good.quote + " Atualizado." })))).status).toBe(200);
+    expect(db.table("testimonials")).toHaveLength(1);
+  });
+  it("rejeita arquivo de foto falso", async () => {
+    pay();
+    const { POST } = await import("@/app/api/testimonials/route");
+    const f = form(good);
+    f.set("photo", new File(["<script>alert(1)</script>".padEnd(3000, " ")], "foto.jpg", { type: "image/jpeg" }));
+    expect((await POST(post(f))).status).toBe(422);
+    expect(db.table("testimonials")).toHaveLength(0);
+  });
+  it("a pessoa consegue remover o próprio depoimento", async () => {
+    pay();
+    const { POST, DELETE } = await import("@/app/api/testimonials/route");
+    await POST(post(form(good)));
+    expect((await DELETE()).status).toBe(200);
+    expect(db.table("testimonials")).toHaveLength(0);
+  });
+});
+
+describe("depoimentos: moderação (/api/admin/testimonials)", () => {
+  const call = (body: unknown) => req("/api/admin/testimonials", { method: "POST", body: JSON.stringify(body) });
+  const TID = "dddddddd-dddd-4ddd-8ddd-dddddddddddd";
+  it("usuário comum não aprova (403)", async () => {
+    db.table("profiles").push({ id: A, role: "user" });
+    db.table("testimonials").push({ id: TID, user_id: A, display_name: "Ana", quote: "x".repeat(40), status: "pending" });
+    const { POST } = await import("@/app/api/admin/testimonials/route");
+    expect((await POST(call({ id: TID, action: "approve" }))).status).toBe(403);
+    expect((db.table("testimonials")[0] as { status: string }).status).toBe("pending");
+  });
+  it("administrador aprova e recusa, com registro de auditoria", async () => {
+    db.table("profiles").push({ id: A, role: "admin" });
+    db.table("testimonials").push({ id: TID, user_id: B, display_name: "Bia", quote: "x".repeat(40), status: "pending" });
+    const { POST } = await import("@/app/api/admin/testimonials/route");
+    expect((await POST(call({ id: TID, action: "approve" }))).status).toBe(200);
+    expect((db.table("testimonials")[0] as { status: string }).status).toBe("approved");
+    expect((await POST(call({ id: TID, action: "reject" }))).status).toBe(200);
+    expect((db.table("testimonials")[0] as { status: string }).status).toBe("rejected");
+    expect(db.table("admin_audit_log").map((r) => (r as { action: string }).action)).toEqual(["testimonial_approve", "testimonial_reject"]);
+    expect((await POST(call({ id: "nao-uuid", action: "approve" }))).status).toBe(422);
+  });
+});

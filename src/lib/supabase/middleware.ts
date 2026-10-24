@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { env } from "@/lib/env";
 
-const PRIVATE_PREFIXES = ["/dashboard", "/resume", "/account", "/admin"];
+const PRIVATE_PREFIXES = ["/dashboard", "/resume", "/account", "/admin", "/depoimento"];
 
 /** Renova a sessão e protege as rotas privadas. */
 export async function updateSession(request: NextRequest) {

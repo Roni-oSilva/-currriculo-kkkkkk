@@ -135,6 +135,7 @@ export function PreviewClient({ resumeId, version, data, design, priceLabel, pay
               <p className="text-sm text-muted">Pagamento confirmado para a versão {version}. O PDF é gerado sem marca d’água, com texto selecionável.</p>
               <DownloadButton resumeId={resumeId} version={version} label="Baixar PDF" />
               <DownloadButton resumeId={resumeId} version={version} regenerate label="Gerar o arquivo novamente" variant="outline" />
+              <Link href="/depoimento" className="block text-sm font-bold text-brand underline">Gostou? Deixe seu depoimento</Link>
               {repurchaseNotice ? <p className="text-xs text-muted">Se você alterar o conteúdo depois, será preciso uma nova compra para liberar a nova versão. A versão paga continua disponível no painel.</p> : null}
             </>
           ) : (
